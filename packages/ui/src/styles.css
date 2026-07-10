@@ -1,0 +1,2 @@
+/* Re-exports the shared design tokens so apps can import a single stylesheet. */
+@import "../../config/tailwind/theme.css";
