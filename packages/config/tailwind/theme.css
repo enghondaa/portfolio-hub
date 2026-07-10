@@ -1,0 +1,60 @@
+/*
+ * Shared Tailwind v4 design tokens for the portfolio monorepo.
+ * Import this after `@import "tailwindcss";` in each app's globals.css:
+ *
+ *   @import "tailwindcss";
+ *   @import "@portfolio/config/tailwind/theme.css";
+ *
+ * Visual direction: minimal, editorial, confident. Generous whitespace,
+ * strong typographic hierarchy, one accent color on a neutral palette.
+ * Full component-level tokens are layered on top in packages/ui (Phase 1).
+ * Font families are set per-app via next/font and exposed as CSS variables
+ * (--font-heading, --font-body, --font-mono); this file just wires the
+ * Tailwind theme to those variables so every app stays consistent.
+ */
+
+@theme {
+  /* Type scale: 1.25 ratio */
+  --text-xs: 0.64rem;
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.563rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-4xl: 3.052rem;
+  --text-5xl: 3.815rem;
+
+  /* Fonts, populated by next/font in each app's root layout */
+  --font-sans: var(--font-body, ui-sans-serif, system-ui, sans-serif);
+  --font-heading: var(--font-heading, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-mono, ui-monospace, SFMono-Regular, monospace);
+
+  /* Neutral palette + one restrained accent, light theme defaults */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f7f7f6;
+  --color-neutral-100: #ececea;
+  --color-neutral-200: #d9d8d4;
+  --color-neutral-400: #98968f;
+  --color-neutral-600: #5f5d57;
+  --color-neutral-800: #2b2a27;
+  --color-neutral-950: #121210;
+
+  --color-accent: #b45309; /* burnt amber, used sparingly */
+  --color-accent-soft: #fef3c7;
+}
+
+/* Dark theme overrides, toggled via a `.dark` class on <html> */
+.dark {
+  --color-neutral-0: #121210;
+  --color-neutral-50: #1a1a17;
+  --color-neutral-100: #242320;
+  --color-neutral-200: #35332e;
+  --color-neutral-400: #7d7b73;
+  --color-neutral-600: #a8a69e;
+  --color-neutral-800: #e4e2dc;
+  --color-neutral-950: #f7f7f6;
+
+  --color-accent: #d97a2b;
+  --color-accent-soft: #3a2a12;
+}
