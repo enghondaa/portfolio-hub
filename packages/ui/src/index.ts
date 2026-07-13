@@ -1,4 +1,11 @@
-// Component library entry point.
-// Phase 1 adds Button, Card, Input, Select, Modal, Tabs, Table, Badge,
-// Navbar, Footer, ThemeToggle here, each with its own test + Storybook story.
-export const UI_PACKAGE_VERSION = "0.0.0";
+export * from "./components/Button";
+export * from "./components/Card";
+export * from "./components/Input";
+export * from "./components/Select";
+export * from "./components/Modal";
+export * from "./components/Tabs";
+export * from "./components/Table";
+export * from "./components/Badge";
+export * from "./components/Navbar";
+export * from "./components/Footer";
+export * from "./components/ThemeToggle";
