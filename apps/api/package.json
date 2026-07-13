@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "express": "^4.21.2",
@@ -23,9 +23,10 @@
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "@eslint/js": "^9.17.0",
-    "typescript-eslint": "^8.19.0",
     "eslint": "^9.17.0",
-    "vitest": "^2.1.8"
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "@types/jest": "^29.5.14",
+    "@portfolio/config": "workspace:*"
   }
 }
