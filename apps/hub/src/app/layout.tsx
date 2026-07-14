@@ -99,6 +99,7 @@ export default function RootLayout({
           <Footer
             brand="Mohand Elshahawy"
             tagline="Full-Stack Developer"
+            availabilityLine="Available for freelance projects. I reply within a day."
             copyright={`© ${new Date().getFullYear()} Mohand Elshahawy`}
             links={navLinks}
             social={[

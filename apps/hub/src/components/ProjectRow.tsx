@@ -2,6 +2,7 @@
 
 import { useRef, useState, type MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 export interface ProjectRowProps {
   index: number;
@@ -17,13 +18,15 @@ export interface ProjectRowProps {
 /**
  * One row in the numbered project list. The whole row is the hit target;
  * on hover it shifts background and tilts a couple of degrees toward the
- * cursor (disabled under prefers-reduced-motion), and the trailing arrow
- * slides right.
+ * cursor (disabled under prefers-reduced-motion), the index number fills
+ * from an outline to solid accent, its bottom rule draws itself in the
+ * first time it scrolls into view, and the trailing arrow slides right.
  */
 export function ProjectRow({ index, href, title, tagline, stack, status, outcome, external }: ProjectRowProps) {
   const ref = useRef<HTMLAnchorElement>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const shouldReduceMotion = useReducedMotion();
+  const Arrow = external ? ArrowUpRight : ArrowRight;
 
   function handleMouseMove(event: MouseEvent<HTMLAnchorElement>) {
     if (shouldReduceMotion || !ref.current) return;
@@ -40,7 +43,7 @@ export function ProjectRow({ index, href, title, tagline, stack, status, outcome
   const metaParts = [stack.join(" · "), outcome].filter(Boolean);
 
   return (
-    <div style={{ perspective: 800 }}>
+    <div className="relative" style={{ perspective: 800 }}>
       <motion.a
         ref={ref}
         href={href}
@@ -51,10 +54,10 @@ export function ProjectRow({ index, href, title, tagline, stack, status, outcome
         animate={{ rotateX: tilt.rx, rotateY: tilt.ry }}
         transition={{ type: "spring", stiffness: 250, damping: 20, mass: 0.5 }}
         style={{ transformStyle: "preserve-3d" }}
-        className="group flex items-center justify-between gap-6 border-b border-[var(--color-neutral-200)] px-3 py-7 transition-colors duration-200 ease-out hover:bg-[var(--color-neutral-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] -mx-3"
+        className="group flex items-center justify-between gap-6 px-3 py-7 transition-colors duration-200 ease-out hover:bg-[var(--color-neutral-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] -mx-3"
       >
         <div className="flex items-baseline gap-5 sm:gap-8">
-          <span className="font-mono text-sm text-[var(--color-neutral-400)]">
+          <span className="project-index font-mono text-sm">
             {String(index + 1).padStart(2, "0")}
           </span>
           <div>
@@ -79,14 +82,22 @@ export function ProjectRow({ index, href, title, tagline, stack, status, outcome
           >
             {status === "live" ? "Live" : "In progress"}
           </span>
-          <span
+          <Arrow
             aria-hidden="true"
+            size={18}
+            strokeWidth={1.75}
             className="text-[var(--color-neutral-400)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
-          >
-            {external ? "↗" : "→"}
-          </span>
+          />
         </div>
       </motion.a>
+      <motion.span
+        aria-hidden="true"
+        initial={{ scaleX: shouldReduceMotion ? 1 : 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.6, ease: "easeOut" }}
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-[var(--color-neutral-200)]"
+      />
     </div>
   );
 }

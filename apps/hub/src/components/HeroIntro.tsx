@@ -3,6 +3,7 @@
 import { useRef, type ReactNode } from "react";
 import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
 import { HeroStats } from "@/components/HeroStats";
+import { Hero3DSceneLoader } from "@/components/Hero3DSceneLoader";
 
 const container: Variants = {
   hidden: {},
@@ -16,10 +17,31 @@ function useItem(reduced: boolean | null): Variants {
   };
 }
 
+const NAME_WORDS = ["Mohand", "Elshahawy"];
+
+const nameContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+};
+
+function useNameWord(reduced: boolean | null): Variants {
+  return {
+    hidden: { opacity: 0, y: reduced ? 0 : 28 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: reduced
+        ? { duration: 0.2, ease: "easeOut" }
+        : { type: "spring", stiffness: 260, damping: 16, mass: 0.7 },
+    },
+  };
+}
+
 /** Staggers the hero's kicker/heading/paragraph/CTAs in on first load, with a subtle scroll parallax between the text column and the stat column. */
 export function HeroIntro({ children }: { children: ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
   const item = useItem(shouldReduceMotion);
+  const nameWord = useNameWord(shouldReduceMotion);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
@@ -27,7 +49,9 @@ export function HeroIntro({ children }: { children: ReactNode }) {
   const statsY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : 12]);
 
   return (
-    <div ref={sectionRef} className="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-8">
+    <div ref={sectionRef} className="relative grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-8">
+      <div aria-hidden="true" className="hero-gradient pointer-events-none absolute -inset-x-6 -inset-y-10 -z-10 rounded-3xl" />
+
       <motion.div initial="hidden" animate="visible" variants={container} style={{ y: textY }} className="lg:col-span-8">
         <motion.p
           variants={item}
@@ -36,10 +60,16 @@ export function HeroIntro({ children }: { children: ReactNode }) {
           Full-Stack Developer
         </motion.p>
         <motion.h1
-          variants={item}
-          className="mt-3 font-[family-name:var(--font-heading)] text-5xl font-semibold leading-[1.05] tracking-tight text-[var(--color-neutral-800)] sm:text-6xl lg:text-7xl"
+          initial="hidden"
+          animate="visible"
+          variants={nameContainer}
+          className="mt-3 flex flex-wrap gap-x-[0.28em] font-[family-name:var(--font-heading)] text-5xl font-semibold leading-[1.05] tracking-tight text-[var(--color-neutral-800)] sm:text-6xl lg:text-7xl"
         >
-          Mohand Elshahawy
+          {NAME_WORDS.map((word) => (
+            <motion.span key={word} variants={nameWord} className="inline-block">
+              {word}
+            </motion.span>
+          ))}
         </motion.h1>
         <motion.p
           variants={item}
@@ -63,8 +93,9 @@ export function HeroIntro({ children }: { children: ReactNode }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: shouldReduceMotion ? 0.2 : 0.55, delay: 0.3, ease: "easeOut" }}
         style={{ y: statsY }}
-        className="lg:col-span-4 lg:justify-self-end"
+        className="relative lg:col-span-4 lg:justify-self-end"
       >
+        <Hero3DSceneLoader />
         <HeroStats />
       </motion.div>
     </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { projects, realProjects } from "@/lib/projects";
 import { Reveal } from "@/components/Reveal";
 import { ProjectRow } from "@/components/ProjectRow";
+import { Divider } from "@/components/Divider";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -21,7 +22,7 @@ export default function ProjectsPage() {
           Real work, and demos built the same way
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-neutral-600)]">
-          The first three are shipped, in production, for real employers. The
+          The first four are shipped, in production, for real employers. The
           four below are demos built to prove specific claims. Status is
           labeled honestly on every one, and each links to real source code.
         </p>
@@ -31,9 +32,11 @@ export default function ProjectsPage() {
         <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
           Production work
         </h2>
-        <div className="mt-2 border-b border-[var(--color-neutral-200)]" />
+        <div className="mt-2">
+          <Divider />
+        </div>
         {realProjects.map((project, i) => (
-          <Reveal key={project.url} delay={i * 0.05}>
+          <Reveal key={project.url} delay={i * 0.08}>
             <ProjectRow
               index={i}
               href={project.url}
@@ -52,9 +55,11 @@ export default function ProjectsPage() {
         <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
           Demos
         </h2>
-        <div className="mt-2 border-b border-[var(--color-neutral-200)]" />
+        <div className="mt-2">
+          <Divider />
+        </div>
         {projects.map((project, i) => (
-          <Reveal key={project.slug} delay={i * 0.05}>
+          <Reveal key={project.slug} delay={i * 0.08}>
             <ProjectRow
               index={i}
               href={`/projects/${project.slug}`}

@@ -1,2 +1,81 @@
 @import "tailwindcss";
 @import "@portfolio/config/tailwind/theme.css";
+
+/* ---------------------------------------------------------------------- */
+/* Hero 3D scene: slow independent drift/rotate loops per plane. Purely   */
+/* decorative, GPU-composited (transform only), paused entirely under    */
+/* prefers-reduced-motion below.                                          */
+/* ---------------------------------------------------------------------- */
+@keyframes hero-drift-1 {
+  0% { transform: translate3d(0, 0, 0) rotateX(8deg) rotateY(-12deg) rotateZ(0deg); }
+  100% { transform: translate3d(10px, -14px, 0) rotateX(-6deg) rotateY(10deg) rotateZ(4deg); }
+}
+@keyframes hero-drift-2 {
+  0% { transform: translate3d(0, 0, 0) rotateX(-10deg) rotateY(16deg) rotateZ(-3deg); }
+  100% { transform: translate3d(-12px, 10px, 0) rotateX(6deg) rotateY(-8deg) rotateZ(5deg); }
+}
+@keyframes hero-drift-3 {
+  0% { transform: translate3d(0, 0, 0) rotateX(14deg) rotateY(6deg) rotateZ(2deg); }
+  100% { transform: translate3d(8px, 12px, 0) rotateX(-8deg) rotateY(-14deg) rotateZ(-4deg); }
+}
+@keyframes hero-drift-4 {
+  0% { transform: translate3d(0, 0, 0) rotateX(-6deg) rotateY(-10deg) rotateZ(4deg); }
+  100% { transform: translate3d(-9px, -11px, 0) rotateX(10deg) rotateY(12deg) rotateZ(-3deg); }
+}
+
+.hero-plane-1 { animation: hero-drift-1 24s ease-in-out infinite alternate; }
+.hero-plane-2 { animation: hero-drift-2 29s ease-in-out infinite alternate; }
+.hero-plane-3 { animation: hero-drift-3 21s ease-in-out infinite alternate; }
+.hero-plane-4 { animation: hero-drift-4 27s ease-in-out infinite alternate; }
+
+/* Barely-perceptible gradient drift behind the hero copy. */
+@keyframes hero-gradient-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.hero-gradient {
+  background-image: radial-gradient(
+    ellipse at 20% 20%,
+    color-mix(in srgb, var(--color-accent) 7%, transparent) 0%,
+    transparent 55%
+  ),
+  radial-gradient(
+    ellipse at 80% 70%,
+    color-mix(in srgb, var(--color-neutral-800) 4%, transparent) 0%,
+    transparent 60%
+  );
+  background-size: 180% 180%;
+  animation: hero-gradient-shift 36s ease-in-out infinite alternate;
+}
+
+/* Project row index number: outline by default, fills solid accent on hover. */
+.project-index {
+  color: var(--color-neutral-400);
+  transition: color 200ms ease-out;
+}
+@supports (-webkit-text-stroke: 1px black) {
+  .project-index {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-neutral-400);
+    transition: color 200ms ease-out, -webkit-text-stroke 200ms ease-out;
+  }
+  .group:hover .project-index,
+  .group:focus-visible .project-index {
+    color: var(--color-accent);
+    -webkit-text-stroke: 1px var(--color-accent);
+  }
+}
+.group:hover .project-index,
+.group:focus-visible .project-index {
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-plane-1,
+  .hero-plane-2,
+  .hero-plane-3,
+  .hero-plane-4,
+  .hero-gradient {
+    animation: none !important;
+  }
+}

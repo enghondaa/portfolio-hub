@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { Menu, X } from "lucide-react";
 import { cn } from "../../lib/cn";
 
 export interface NavLink {
@@ -18,18 +19,97 @@ export interface NavbarProps {
   className?: string;
 }
 
+/** Nav link that leans gently toward the cursor on hover (max ~6px), via plain CSS transform. No-op if the user prefers reduced motion. */
+function MagneticNavLink({
+  href,
+  isActive,
+  reduced,
+  onNavigate,
+  children,
+}: {
+  href: string;
+  isActive: boolean;
+  reduced: boolean;
+  onNavigate?: () => void;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  function handleMouseMove(event: MouseEvent<HTMLAnchorElement>) {
+    if (reduced || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const relX = event.clientX - (rect.left + rect.width / 2);
+    const relY = event.clientY - (rect.top + rect.height / 2);
+    setOffset({ x: relX * 0.2, y: relY * 0.3 });
+  }
+
+  function handleMouseLeave() {
+    setOffset({ x: 0, y: 0 });
+  }
+
+  return (
+    <a
+      ref={ref}
+      href={href}
+      aria-current={isActive ? "page" : undefined}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={onNavigate}
+      style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+      className={cn(
+        "group relative font-mono text-xs uppercase tracking-wider transition-[color,transform] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded",
+        isActive ? "text-[var(--color-accent)]" : "text-[var(--color-neutral-600)] hover:text-[var(--color-accent)]"
+      )}
+    >
+      {children}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute -bottom-1 left-0 h-px w-full origin-left bg-current transition-transform duration-200 ease-out",
+          isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+        )}
+      />
+    </a>
+  );
+}
+
 /**
- * Responsive top nav. Collapses to an accessible disclosure menu below the
- * md breakpoint: a single button with aria-expanded toggles a visible panel,
- * and every link remains reachable by keyboard.
+ * Responsive top nav. Starts transparent over the hero and gains a blurred
+ * background + hairline border once the page scrolls past it. Collapses to
+ * an accessible disclosure menu below the md breakpoint: a single button
+ * with aria-expanded toggles a visible panel, and every link remains
+ * reachable by keyboard.
  */
 export function Navbar({ brand, links, activeHref, actions, className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const update = () => setPrefersReducedMotion(mq.matches);
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 32);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
       className={cn(
-        "border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-0)]",
+        "sticky top-0 z-40 border-b transition-colors duration-300",
+        scrolled
+          ? "border-[var(--color-neutral-200)] bg-[var(--color-neutral-0)]/80 backdrop-blur-md"
+          : "border-transparent bg-transparent",
         className
       )}
     >
@@ -39,29 +119,16 @@ export function Navbar({ brand, links, activeHref, actions, className }: NavbarP
         </div>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-          {links.map((link) => {
-            const isActive = activeHref === link.href;
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "group relative font-mono text-xs uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded",
-                  isActive ? "text-[var(--color-accent)]" : "text-[var(--color-neutral-600)] hover:text-[var(--color-accent)]"
-                )}
-              >
-                {link.label}
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "absolute -bottom-1 left-0 h-px w-full origin-left bg-current transition-transform duration-200 ease-out",
-                    isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  )}
-                />
-              </a>
-            );
-          })}
+          {links.map((link) => (
+            <MagneticNavLink
+              key={link.href}
+              href={link.href}
+              isActive={activeHref === link.href}
+              reduced={prefersReducedMotion}
+            >
+              {link.label}
+            </MagneticNavLink>
+          ))}
           {actions}
         </nav>
 
@@ -73,13 +140,7 @@ export function Navbar({ brand, links, activeHref, actions, className }: NavbarP
           aria-label={isOpen ? "Close menu" : "Open menu"}
           onClick={() => setIsOpen((open) => !open)}
         >
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-            {isOpen ? (
-              <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-            ) : (
-              <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
+          {isOpen ? <X size={22} strokeWidth={1.75} aria-hidden="true" /> : <Menu size={22} strokeWidth={1.75} aria-hidden="true" />}
         </button>
       </div>
 
@@ -87,7 +148,7 @@ export function Navbar({ brand, links, activeHref, actions, className }: NavbarP
         id="mobile-nav"
         aria-label="Primary"
         hidden={!isOpen}
-        className="border-t border-[var(--color-neutral-200)] px-4 py-3 md:hidden"
+        className="border-t border-[var(--color-neutral-200)] bg-[var(--color-neutral-0)] px-4 py-3 md:hidden"
       >
         <ul className="flex flex-col gap-1">
           {links.map((link) => (

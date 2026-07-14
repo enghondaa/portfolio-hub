@@ -7,6 +7,7 @@ import { MagneticLink } from "@/components/MagneticLink";
 import { HeroIntro } from "@/components/HeroIntro";
 import { ProjectRow } from "@/components/ProjectRow";
 import { LiveChartWidget } from "@/components/LiveChartWidget";
+import { Divider } from "@/components/Divider";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -45,7 +46,7 @@ export default function Home() {
 
       <LiveChartWidget />
 
-      <div className="mt-24 flex items-baseline justify-between border-b border-[var(--color-neutral-200)] pb-4">
+      <div className="mt-24 flex items-baseline justify-between pb-4">
         <h2 className="font-[family-name:var(--font-heading)] text-2xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
           Featured work
         </h2>
@@ -56,10 +57,11 @@ export default function Home() {
           See all
         </Link>
       </div>
+      <Divider />
 
       <div>
         {projects.map((project, i) => (
-          <Reveal key={project.slug} delay={i * 0.05}>
+          <Reveal key={project.slug} delay={i * 0.08}>
             <ProjectRow
               index={i}
               href={`/projects/${project.slug}`}

@@ -1,3 +1,5 @@
+import { AnimatedNumber } from "@/components/AnimatedNumber";
+
 const stats = [
   { value: "5+", label: "Years experience" },
   { value: "10,000+", label: "Daily users supported" },
@@ -12,8 +14,8 @@ export function HeroStats() {
           <dt className="font-mono text-xs uppercase tracking-wider text-[var(--color-neutral-400)]">
             {stat.label}
           </dt>
-          <dd className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
-            {stat.value}
+          <dd className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-semibold tracking-tight text-[var(--color-neutral-800)] tabular-nums">
+            <AnimatedNumber value={stat.value} />
           </dd>
         </div>
       ))}

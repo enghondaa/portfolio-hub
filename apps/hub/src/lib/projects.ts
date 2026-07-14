@@ -84,6 +84,13 @@ export interface RealProject {
 /** Actual production work, built for real employers. Not demos. */
 export const realProjects: RealProject[] = [
   {
+    name: "aigentsrealty.com",
+    url: "https://www.aigentsrealty.com",
+    description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    employer: "AiGentsRealty (part-time)",
+  },
+  {
     name: "bezogia.com",
     url: "https://bezogia.com",
     description: "Cryptocurrency platform optimized for performance and SEO.",
@@ -103,12 +110,5 @@ export const realProjects: RealProject[] = [
     description: "Account management platform with Web3 wallet integration, serving 10,000+ users.",
     stack: ["React", "TypeScript", "Next.js", "Material-UI", "Web3React"],
     employer: "Bezoge.com",
-  },
-  {
-    name: "aigentsrealty.com",
-    url: "https://www.aigentsrealty.com",
-    description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
-    employer: "AiGentsRealty (part-time)",
   },
 ];
