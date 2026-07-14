@@ -13,6 +13,18 @@
  * Tailwind theme to those variables so every app stays consistent.
  */
 
+/*
+ * Tailwind v4 only scans files it can see as "content" to decide which
+ * utility classes to generate. Components in packages/ui are consumed as
+ * a workspace dependency (through node_modules), and Tailwind's default
+ * source auto-detection does not look inside node_modules/symlinked
+ * packages. Without this line, any utility class used only inside
+ * packages/ui (and never duplicated in an app's own source) never gets
+ * generated: this is why Navbar's "hidden md:flex gap-6" classes were
+ * silently missing from the compiled CSS.
+ */
+@source "../../ui/src/**/*.{ts,tsx}";
+
 @theme {
   /* Type scale: 1.25 ratio */
   --text-xs: 0.64rem;
