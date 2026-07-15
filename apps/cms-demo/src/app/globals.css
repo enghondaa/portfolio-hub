@@ -1,2 +1,90 @@
 @import "tailwindcss";
 @import "@portfolio/config/tailwind/theme.css";
+
+/*
+ * CMS Demo gets its own identity, deliberately distinct from the hub's warm
+ * amber/cream look: a crisp white "paper" background, near-black ink, and a
+ * cool indigo accent — an editorial technical-journal feel. Reuses the same
+ * @portfolio/ui components as every other app; they just read these same
+ * CSS variables, so overriding the values here is enough to re-skin them.
+ */
+@theme {
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f7f8fa;
+  --color-neutral-100: #eef0f4;
+  --color-neutral-200: rgba(15, 23, 42, 0.1);
+  --color-neutral-400: #94a3b8;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #16181d;
+  --color-neutral-950: #0d1117;
+
+  --color-accent: #3457d5;
+  --color-accent-light: #5c7cfa;
+  --color-accent-soft: #eef1fb;
+  --color-success: #0f766e;
+}
+
+.prose-article pre {
+  background: var(--color-neutral-950);
+  color: #e6e6e6;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.prose-article code {
+  font-family: var(--font-mono);
+}
+.prose-article :not(pre) > code {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  font-size: 0.85em;
+}
+.prose-article h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
+  color: var(--color-neutral-800);
+}
+.prose-article h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-top: 1.8em;
+  margin-bottom: 0.5em;
+  color: var(--color-neutral-800);
+}
+.prose-article p {
+  margin: 1em 0;
+  line-height: 1.75;
+  color: var(--color-neutral-700);
+}
+.prose-article ul,
+.prose-article ol {
+  margin: 1em 0;
+  padding-left: 1.4em;
+  color: var(--color-neutral-700);
+}
+.prose-article li {
+  margin: 0.4em 0;
+  line-height: 1.7;
+}
+.prose-article a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-article blockquote {
+  border-left: 3px solid var(--color-accent);
+  margin: 1.4em 0;
+  padding: 0.2em 1.2em;
+  color: var(--color-neutral-600);
+  font-style: italic;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -42,10 +42,15 @@ function Magnetic({ children, className }: { children: React.ReactNode; classNam
 export function FloatingNavbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [lastPathname, setLastPathname] = useState(pathname);
 
-  useEffect(() => {
+  // Close the mobile panel on navigation. Adjusting state during render
+  // (rather than in a useEffect) avoids the extra commit-then-effect
+  // render pass for what's just "reset on prop change".
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
     setIsOpen(false);
-  }, [pathname]);
+  }
 
   return (
     <div className="fixed inset-x-0 top-3 z-50 flex justify-center px-4">

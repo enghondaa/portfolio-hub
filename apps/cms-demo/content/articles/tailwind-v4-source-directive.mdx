@@ -1,0 +1,71 @@
+---
+title: "The Tailwind v4 bug that only breaks your shared component library"
+date: "2026-07-10"
+tags: ["Tailwind CSS", "Monorepo", "Debugging"]
+excerpt: "Tailwind v4's automatic content detection doesn't look inside node_modules — including your own workspace packages. Here's the exact symptom, and the one-line fix."
+---
+
+I spent longer than I'd like to admit staring at a navbar that refused to
+collapse into a mobile menu. The classes were right there in the component:
+`hidden md:flex gap-6`. DevTools showed the element existed. The classes
+just... didn't do anything.
+
+## The symptom
+
+In a Turborepo monorepo with a shared `packages/ui` component library, a
+`Navbar` component used classes like:
+
+```tsx
+<nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
+```
+
+Running `getComputedStyle(nav).display` in the console returned `"block"`
+instead of `"flex"`. The compiled CSS simply didn't contain a
+`.md\:flex { display: flex }` rule at all — not "wrong," just *absent*.
+
+## Why it happens
+
+Tailwind v4 replaced the old `content: [...]` config array with automatic
+content detection: it scans your project for files that might contain class
+names. But that automatic scan does not look inside `node_modules` —
+including packages that are symlinked in via a pnpm/Turborepo workspace.
+
+If your app imports `Navbar` from `@portfolio/ui`, and the only place
+`hidden md:flex` appears in source is inside `packages/ui/src/...`, Tailwind
+never sees that file. Any utility class used *exclusively* inside a shared
+package — never duplicated in the consuming app's own source — silently
+never gets generated.
+
+This is worse than a build error: there's no warning, no failed build. The
+page renders. It just doesn't have the styles you wrote.
+
+## The fix
+
+Tailwind v4 lets you opt individual paths back into the content scan with an
+explicit `@source` directive, right in your CSS:
+
+```css
+/* packages/config/tailwind/theme.css */
+@source "../../ui/src/**/*.{ts,tsx}";
+
+@theme {
+  /* your design tokens */
+}
+```
+
+Add this once, in the shared theme file every app imports, and every class
+used anywhere inside `packages/ui/src` gets picked up — regardless of
+whether the consuming app happens to duplicate that class name in its own
+files.
+
+## How I'd have caught it sooner
+
+Don't just check that a `pnpm build` succeeds — grep the compiled output for
+a class you expect to see:
+
+```bash
+grep -o '\.md\\:flex{[^}]*}' .next/static/chunks/*.css
+```
+
+If that comes back empty, and you're consuming any styling from a workspace
+package, this is the first thing to check.

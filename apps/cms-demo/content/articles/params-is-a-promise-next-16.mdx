@@ -1,0 +1,75 @@
+---
+title: "Next.js 16 quietly made params a Promise, and it 404s without telling you"
+date: "2026-07-12"
+tags: ["Next.js", "App Router", "Debugging"]
+excerpt: "Every dynamic route page in a project 404'd after upgrading — no error, no warning, tsc --noEmit passed clean. Here's how a one-line await fixes it, and why it's so easy to miss."
+---
+
+Four dynamic case-study pages in a portfolio site — `/projects/taskboard`,
+`/projects/analytics`, and two more — all returned a 404. The build
+succeeded. `tsc --noEmit` passed with zero errors. Nothing in the terminal
+hinted anything was wrong.
+
+## The setup
+
+The page looked like this, following the pattern that's worked in every
+prior Next.js version:
+
+```tsx
+export default function ProjectPage({ params }: { params: { slug: string } }) {
+  const project = getProject(params.slug);
+  if (!project) notFound();
+  // ...
+}
+```
+
+This compiles. TypeScript is happy, because the type annotation on `params`
+is a claim you're making about the shape of an object — nothing checks it
+against what Next.js is actually passing in at runtime.
+
+## What actually changed
+
+In Next.js 16, `params` (and `searchParams`) on page and layout Server
+Components became a `Promise`, not a plain object. Reading `params.slug`
+synchronously on a Promise doesn't throw — `params` is still an object, and
+`.slug` on a Promise is just `undefined`. `getProject(undefined)` returns
+`undefined`. `notFound()` fires. Every single dynamic route, silently.
+
+No runtime error. No type error, because the *old* type annotation
+(`{ slug: string }` instead of `Promise<{ slug: string }>`) is exactly wrong
+in the way that doesn't get caught — the code still type-checks against the
+stale shape you wrote, it just no longer matches what Next.js sends.
+
+## The fix
+
+```tsx
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) notFound();
+  // ...
+}
+```
+
+Same change applies to `generateMetadata`, wherever it destructures `params`.
+
+## How I actually caught this
+
+Not from the terminal — `next build` reported success. I caught it by
+inspecting the actual static output after the build, rather than trusting
+the "build succeeded" message on its own:
+
+```bash
+cat .next/server/app/projects/taskboard.meta
+# { "status": 404, ... }   <-- this is the tell
+```
+
+A `.meta` file with no `status` field means an implicit 200. A `status: 404`
+sitting next to a "successful" build is the sign that a route resolved to
+`notFound()` at build time. If you're upgrading across a major Next.js
+version, this is worth checking on every dynamic route before you trust the
+deploy.

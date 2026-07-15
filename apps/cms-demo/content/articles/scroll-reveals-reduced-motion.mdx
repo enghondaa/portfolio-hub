@@ -1,0 +1,111 @@
+---
+title: "Scroll animations that don't hijack anyone's vestibular system"
+date: "2026-07-14"
+tags: ["Framer Motion", "Accessibility", "Animation"]
+excerpt: "A reusable pattern for scroll-reveal, count-up, and hover-tilt animations that all collapse to instant/static under prefers-reduced-motion — without three copies of the same if-statement."
+---
+
+Every animated element in this site — fade-up reveals, count-up stats,
+cursor-tilt project cards, a magnetic hover on the nav links — has to do the
+same two things: animate when it's allowed to, and get out of the way
+instantly when the user has `prefers-reduced-motion: reduce` set. Writing
+that check inline, every time, is how you end up with one component that
+forgot it.
+
+## The base pattern: a single reveal wrapper
+
+Instead of repeating scroll-trigger logic on every section, one small
+wrapper handles it once:
+
+```tsx
+"use client";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+
+export function Reveal({ children, delay = 0, className }: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+
+  const variants: Variants = {
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 14 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: shouldReduceMotion ? 0.15 : 0.5, delay, ease: "easeOut" },
+    },
+  };
+
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={variants}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
+`useReducedMotion()` reads the media query once and re-renders if it
+changes — no manual `matchMedia` listener needed for this part. Every
+section on the page wraps in `<Reveal delay={i * 0.08}>` and gets a
+consistent staggered fade-up, with a hard `viewport={{ once: true }}` so
+it never re-triggers as you scroll up and down past it.
+
+## Count-up numbers: same idea, different mechanism
+
+A stat like "99.8%" counting up from zero uses `requestAnimationFrame`
+directly rather than Framer Motion's `animate()`, because the display value
+needs custom formatting (commas, a trailing `%`, a fixed decimal place) on
+every frame:
+
+```tsx
+const shouldReduceMotion = useReducedMotion();
+
+useEffect(() => {
+  if (!isInView) return;
+  if (shouldReduceMotion) {
+    setDisplay(value); // snap straight to the final value
+    return;
+  }
+  // ...requestAnimationFrame loop from 0 to target
+}, [isInView, shouldReduceMotion, value]);
+```
+
+The reduced-motion branch is the very first check, before any frame loop
+starts — not a flag that shortens the animation, but a branch that skips it
+entirely.
+
+## Cursor-tilt cards: the check has to happen inside the handler
+
+Tilt-on-hover can't rely on a React hook alone, because the "animation" is
+really just state updates driven by `mousemove`. The guard goes inside the
+handler itself:
+
+```tsx
+function handleMouseMove(event: MouseEvent<HTMLAnchorElement>) {
+  if (!ref.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const rect = ref.current.getBoundingClientRect();
+  const px = (event.clientX - rect.left) / rect.width - 0.5;
+  const py = (event.clientY - rect.top) / rect.height - 0.5;
+  setTilt({ rx: -py * 7, ry: px * 7 });
+}
+```
+
+If reduced motion is on, `setTilt` never runs, the card's transform never
+leaves its resting state, and there's no separate disabled code path to
+maintain — the tilt state simply never changes.
+
+## The rule that ties it together
+
+Every animation in the codebase checks `prefers-reduced-motion` at the
+*point where motion would be introduced* — inside the frame loop, inside
+the mouse handler, inside the variants object — rather than wrapping whole
+components in an `if (reducedMotion) return <StaticVersion />`. That keeps
+the static and animated versions as one component with one source of truth,
+instead of two components that can quietly drift apart.
