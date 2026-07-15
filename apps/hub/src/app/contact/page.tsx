@@ -51,12 +51,21 @@ export default function ContactPage() {
         Get in touch
       </h1>
       <p className="mt-4 text-lg leading-relaxed text-[var(--color-neutral-600)]">
-        Send a message below, or email me directly at{" "}
+        Send a message below, email me directly at{" "}
         <a
           href={`mailto:${CONTACT_EMAIL}`}
           className="text-[var(--color-accent)] underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
         >
           {CONTACT_EMAIL}
+        </a>
+        , or find me on{" "}
+        <a
+          href="https://linkedin.com/in/mohand-elshahawy-b07523235"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--color-accent)] underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
+        >
+          LinkedIn
         </a>
         .
       </p>

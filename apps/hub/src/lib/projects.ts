@@ -22,10 +22,10 @@ export const projects: Project[] = [
   {
     slug: "taskboard",
     title: "Task Board",
-    tagline: "MERN Kanban board with auth and a real REST API",
+    tagline: "Kanban board with auth and a real REST API",
     problem:
-      "A Kanban-style task board: React frontend, Express + MongoDB API, JWT auth with refresh tokens, drag-and-drop cards with optimistic updates, and a guest login that spins up a seeded demo account in one click.",
-    stack: ["React", "TypeScript", "Next.js", "Zustand", "Node.js", "Express.js", "MongoDB", "Mongoose"],
+      "A Kanban-style task board: React frontend, an Express REST API with JWT auth and refresh tokens, drag-and-drop cards with optimistic updates, and a guest login that spins up a seeded demo account in one click.",
+    stack: ["React", "TypeScript", "Next.js", "Zustand", "Node.js", "Express.js"],
     status: "in-progress",
     repoPath: "apps/taskboard",
   },
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     status: "in-progress",
     repoPath: "apps/analytics",
     realWorldNote:
-      "The pattern is drawn from analytics dashboards I built at Youhue, where similar D3.js/Chart.js work cut data processing time by 60% for a platform serving 150+ schools.",
+      "The pattern is drawn from the analytics dashboards I currently build at Youhue, where similar D3.js/Chart.js work cut data processing time by 60% for a platform serving 150+ schools.",
   },
   {
     slug: "component-library",
@@ -61,10 +61,43 @@ export const projects: Project[] = [
     status: "in-progress",
     repoPath: "apps/cms-demo",
     realWorldNote:
-      "Builds on the same Next.js + content workflow I used leading a redesign at Bezoge.com that improved page load speed by 45%.",
+      "Builds on the same Next.js + Strapi CMS workflow I used leading a full site redesign at Bezoge.com, which improved page load speed by 45%.",
   },
 ];
 
 export function getProject(slug: string): Project | undefined {
   return projects.find((project) => project.slug === slug);
 }
+
+export interface RealProject {
+  name: string;
+  url: string;
+  description: string;
+  stack: string[];
+  employer: string;
+}
+
+/** Actual production work, built for real employers. Not demos. */
+export const realProjects: RealProject[] = [
+  {
+    name: "bezogia.com",
+    url: "https://bezogia.com",
+    description: "Cryptocurrency platform optimized for performance and SEO.",
+    stack: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
+    employer: "Bezoge.com",
+  },
+  {
+    name: "zogilabs.io",
+    url: "https://zogilabs.io",
+    description: "Corporate website rebuilt for a 45% improvement in load times.",
+    stack: ["React", "Next.js", "TypeScript"],
+    employer: "Bezoge.com",
+  },
+  {
+    name: "account.zogilabs.io",
+    url: "https://account.zogilabs.io",
+    description: "Account management platform with Web3 wallet integration, serving 10,000+ users.",
+    stack: ["React", "TypeScript", "Next.js", "Material-UI", "Web3React"],
+    employer: "Bezoge.com",
+  },
+];
