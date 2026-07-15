@@ -36,12 +36,12 @@ export function Navbar({ brand, links, actions, className }: NavbarProps) {
           {brand}
         </div>
 
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[var(--color-neutral-600)] hover:text-[var(--color-neutral-800)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
+              className="font-mono text-xs uppercase tracking-wider text-[var(--color-neutral-600)] hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded transition-colors"
             >
               {link.label}
             </a>
