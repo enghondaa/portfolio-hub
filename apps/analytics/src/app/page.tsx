@@ -1,13 +1,57 @@
+import { DemoDataBanner } from "@/components/DemoDataBanner";
+import { FilterBar } from "@/components/FilterBar";
+import { DashboardPanel } from "@/components/DashboardPanel";
+import { AttendancePanelLoader } from "@/components/AttendancePanelLoader";
+import { GradeDistributionPanelLoader } from "@/components/GradeDistributionPanelLoader";
+import { WellbeingPanelLoader } from "@/components/WellbeingPanelLoader";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--color-neutral-0)] px-6 text-[var(--color-neutral-800)]">
-      <div className="text-center">
-        <p className="font-mono text-sm uppercase tracking-wide text-[var(--color-accent)]">
-          Scaffold
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold">Analytics Dashboard</h1>
-        <p className="mt-2 text-[var(--color-neutral-600)]">School analytics dashboard demo (Phase 4)</p>
+    <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-14">
+      <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-accent)]">/ analytics demo</p>
+      <h1 className="mt-2 font-[family-name:var(--font-heading)] text-3xl font-bold tracking-tight text-[var(--color-neutral-800)] sm:text-4xl">
+        School analytics dashboard
+      </h1>
+      <p className="mt-2 max-w-2xl text-[var(--color-neutral-600)]">
+        Attendance trends, grade distribution, and a wellbeing heatmap — the same D3.js/Chart.js
+        pattern behind the dashboards I build at Youhue, here with fully seeded, fictional data.
+      </p>
+
+      <div className="mt-6">
+        <DemoDataBanner />
       </div>
-    </main>
+
+      <div className="mt-6">
+        <FilterBar />
+      </div>
+
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+        <DashboardPanel
+          eyebrow="Attendance"
+          title="Weekly attendance rate"
+          description="Percent of enrolled students present, by week, for the selected grade band."
+        >
+          <AttendancePanelLoader />
+        </DashboardPanel>
+
+        <DashboardPanel
+          eyebrow="Grades"
+          title="Grade distribution"
+          description="Count of students per letter grade, for the selected range and grade band."
+        >
+          <GradeDistributionPanelLoader />
+        </DashboardPanel>
+
+        <div className="lg:col-span-2">
+          <DashboardPanel
+            eyebrow="Wellbeing"
+            title="Weekly wellbeing heatmap"
+            description="A seeded wellbeing score by weekday, across the selected time range. Hover a cell for its value."
+          >
+            <WellbeingPanelLoader />
+          </DashboardPanel>
+        </div>
+      </div>
+    </div>
   );
 }

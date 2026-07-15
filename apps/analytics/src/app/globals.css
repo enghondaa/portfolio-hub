@@ -1,2 +1,28 @@
 @import "tailwindcss";
 @import "@portfolio/config/tailwind/theme.css";
+
+/*
+ * Analytics Dashboard gets a third distinct identity: a dark data-dashboard
+ * look, deliberately different from the hub's warm amber/cream and CMS
+ * Demo's white editorial theme. Near-black surfaces, one violet accent for
+ * primary series, one cyan for secondary. Same @portfolio/ui components,
+ * re-themed purely through these CSS variables.
+ */
+@theme {
+  --color-neutral-0: #0b0d12;    /* page background */
+  --color-neutral-50: #12151c;   /* card background */
+  --color-neutral-100: #1a1e28;  /* chip / hover background */
+  --color-neutral-200: rgba(226, 229, 240, 0.1); /* hairline borders */
+  --color-neutral-400: #6b7180;  /* faint/placeholder text */
+  --color-neutral-600: #9096a8;  /* secondary text */
+  --color-neutral-700: #b4b9c7;  /* body copy */
+  --color-neutral-800: #e8eaf2;  /* primary ink (light, on dark bg) */
+  --color-neutral-950: #ffffff;
+
+  --color-accent: #8b7cf6;       /* violet — primary series */
+  --color-accent-light: #a99bff;
+  --color-accent-soft: #201c3a;
+  --color-cyan: #22d3ee;         /* secondary series */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+}
