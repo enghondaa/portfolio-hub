@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { HeatmapLegend } from "@/components/HeatmapLegend";
 
 const WellbeingHeatmap = dynamic(() => import("@/components/WellbeingHeatmap").then((m) => m.WellbeingHeatmap), {
   ssr: false,
@@ -8,5 +9,10 @@ const WellbeingHeatmap = dynamic(() => import("@/components/WellbeingHeatmap").t
 });
 
 export function WellbeingPanelLoader() {
-  return <WellbeingHeatmap />;
+  return (
+    <div>
+      <WellbeingHeatmap />
+      <HeatmapLegend />
+    </div>
+  );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as d3 from "d3";
 import { useFilterStore } from "@/lib/store";
-import { getWellbeingHeatmap } from "@/lib/data";
+import { formatWeekLabel, getWellbeingHeatmap } from "@/lib/data";
 
 const CELL = 34;
 const GAP = 5;
@@ -64,7 +64,7 @@ export function WellbeingHeatmap() {
                 .duration(450)
                 .attr("fill", (d) => color(d.score))
             )
-            .call((enter) => enter.append("title").text((d) => `Week ${d.week + 1}, ${d.day}: wellbeing score ${d.score}`)),
+            .call((enter) => enter.append("title").text((d) => `Week of ${formatWeekLabel(d.week)}, ${d.day}: wellbeing score ${d.score}`)),
         (update) =>
           update.call((update) =>
             update

@@ -4,7 +4,8 @@ import { useFilterStore } from "@/lib/store";
 import { GRADE_BANDS, TIME_RANGES } from "@/lib/data";
 
 export function FilterBar() {
-  const { timeRange, gradeBand, setTimeRange, setGradeBand } = useFilterStore();
+  const { timeRange, gradeBand, compareBand, setTimeRange, setGradeBand, setCompareBand } = useFilterStore();
+  const compareOptions = GRADE_BANDS.filter((band) => band !== gradeBand);
 
   return (
     <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)] p-4">
@@ -35,10 +36,44 @@ export function FilterBar() {
             <button
               key={band}
               type="button"
-              onClick={() => setGradeBand(band)}
+              onClick={() => {
+                setGradeBand(band);
+                if (compareBand === band) setCompareBand(null);
+              }}
               className={
                 band === gradeBand
                   ? "rounded-full bg-[var(--color-accent)] px-3 py-1.5 font-mono text-xs font-medium text-[var(--color-neutral-950)]"
+                  : "rounded-full px-3 py-1.5 font-mono text-xs text-[var(--color-neutral-600)] transition-colors hover:text-[var(--color-neutral-800)]"
+              }
+            >
+              {band}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-600)]">Compare with</span>
+        <div className="flex flex-wrap gap-1 rounded-full bg-[var(--color-neutral-100)] p-1">
+          <button
+            type="button"
+            onClick={() => setCompareBand(null)}
+            className={
+              compareBand === null
+                ? "rounded-full bg-[var(--color-neutral-400)] px-3 py-1.5 font-mono text-xs font-medium text-[var(--color-neutral-950)]"
+                : "rounded-full px-3 py-1.5 font-mono text-xs text-[var(--color-neutral-600)] transition-colors hover:text-[var(--color-neutral-800)]"
+            }
+          >
+            None
+          </button>
+          {compareOptions.map((band) => (
+            <button
+              key={band}
+              type="button"
+              onClick={() => setCompareBand(band)}
+              className={
+                band === compareBand
+                  ? "rounded-full bg-[var(--color-neutral-400)] px-3 py-1.5 font-mono text-xs font-medium text-[var(--color-neutral-950)]"
                   : "rounded-full px-3 py-1.5 font-mono text-xs text-[var(--color-neutral-600)] transition-colors hover:text-[var(--color-neutral-800)]"
               }
             >

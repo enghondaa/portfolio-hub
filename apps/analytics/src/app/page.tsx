@@ -1,9 +1,12 @@
 import { DemoDataBanner } from "@/components/DemoDataBanner";
 import { FilterBar } from "@/components/FilterBar";
 import { DashboardPanel } from "@/components/DashboardPanel";
+import { KPISummary } from "@/components/KPISummary";
+import { InsightCallout } from "@/components/InsightCallout";
 import { AttendancePanelLoader } from "@/components/AttendancePanelLoader";
 import { GradeDistributionPanelLoader } from "@/components/GradeDistributionPanelLoader";
 import { WellbeingPanelLoader } from "@/components/WellbeingPanelLoader";
+import { AtRiskPanelLoader } from "@/components/AtRiskPanelLoader";
 
 export default function Home() {
   return (
@@ -13,8 +16,9 @@ export default function Home() {
         School analytics dashboard
       </h1>
       <p className="mt-2 max-w-2xl text-[var(--color-neutral-600)]">
-        Attendance trends, grade distribution, and a wellbeing heatmap — the same D3.js/Chart.js
-        pattern behind the dashboards I build at Youhue, here with fully seeded, fictional data.
+        Attendance trends, grade distribution, wellbeing, and a synthesized at-risk signal — the
+        same D3.js/Chart.js pattern behind the dashboards I build at Youhue, here with fully
+        seeded, fictional data.
       </p>
 
       <div className="mt-6">
@@ -25,11 +29,19 @@ export default function Home() {
         <FilterBar />
       </div>
 
+      <div className="mt-6">
+        <KPISummary />
+      </div>
+
+      <div className="mt-5">
+        <InsightCallout />
+      </div>
+
       <div className="mt-6 grid gap-5 lg:grid-cols-2">
         <DashboardPanel
           eyebrow="Attendance"
           title="Weekly attendance rate"
-          description="Percent of enrolled students present, by week, for the selected grade band."
+          description="Percent of enrolled students present, by week, for the selected grade band. Add a comparison band above to overlay a second line."
         >
           <AttendancePanelLoader />
         </DashboardPanel>
@@ -37,7 +49,7 @@ export default function Home() {
         <DashboardPanel
           eyebrow="Grades"
           title="Grade distribution"
-          description="Count of students per letter grade, for the selected range and grade band."
+          description="Count of students per letter grade, for the selected range and grade band. Grouped bars appear when comparing two bands."
         >
           <GradeDistributionPanelLoader />
         </DashboardPanel>
@@ -46,9 +58,19 @@ export default function Home() {
           <DashboardPanel
             eyebrow="Wellbeing"
             title="Weekly wellbeing heatmap"
-            description="A seeded wellbeing score by weekday, across the selected time range. Hover a cell for its value."
+            description="A seeded wellbeing score by weekday, across the selected time range. Hover a cell for its value and date."
           >
             <WellbeingPanelLoader />
+          </DashboardPanel>
+        </div>
+
+        <div className="lg:col-span-2">
+          <DashboardPanel
+            eyebrow="At-risk"
+            title="Students flagged across all three signals"
+            description="Synthesized from the same seeded roster as the charts above — students below threshold on attendance, grades, and wellbeing at once."
+          >
+            <AtRiskPanelLoader />
           </DashboardPanel>
         </div>
       </div>
