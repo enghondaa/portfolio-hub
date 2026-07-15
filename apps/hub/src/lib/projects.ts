@@ -41,7 +41,8 @@ export const projects: Project[] = [
     problem:
       "A school analytics dashboard with attendance trends, grade distributions, and a wellbeing heatmap, all backed by seeded demo data and filterable in real time. Clearly labeled as a demo throughout — no real student data.",
     stack: ["Next.js", "TypeScript", "D3.js", "Chart.js", "Zustand", "Tailwind CSS"],
-    status: "in-progress",
+    status: "live",
+    liveUrl: "https://mohand-analytics-demo.vercel.app",
     repoPath: "apps/analytics",
     outcome: "the pattern that cut data processing time 60% at Youhue",
     realWorldNote:
@@ -66,7 +67,8 @@ export const projects: Project[] = [
     problem:
       "An MDX-powered content site: drop a new .mdx file in and it publishes as a new article on rebuild, no code changes required. Includes tags, search, syntax highlighting, reading time, an RSS feed, and a sitemap.",
     stack: ["Next.js", "TypeScript", "MDX", "Tailwind CSS"],
-    status: "in-progress",
+    status: "live",
+    liveUrl: "https://mohand-cms-demo.vercel.app",
     repoPath: "apps/cms-demo",
     outcome: "the same workflow that improved page load speed 45% at Bezoge.com",
     realWorldNote:
