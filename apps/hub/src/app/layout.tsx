@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
-import { Navbar, Footer, ThemeToggle } from "@portfolio/ui";
+import { Footer } from "@portfolio/ui";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { SiteNavbar } from "@/components/SiteNavbar";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -93,18 +94,24 @@ export default function RootLayout({
         />
         <ScrollProgress />
         <div className="relative flex min-h-screen flex-col">
-          <Navbar
-            brand="Mohand Elshahawy"
-            links={navLinks}
-            actions={<ThemeToggle />}
-          />
+          <SiteNavbar brand="Mohand Elshahawy" links={navLinks} />
           <main className="flex-1">{children}</main>
-          <Footer copyright={`© ${new Date().getFullYear()} Mohand Elshahawy`}>
+          <Footer
+            brand="Mohand Elshahawy"
+            tagline="Senior Front-End Engineer"
+            copyright={`© ${new Date().getFullYear()} Mohand Elshahawy`}
+            links={navLinks}
+            social={[
+              { href: "https://github.com/enghondaa/portfolio-hub", label: "GitHub", icon: "github" },
+              { href: "https://linkedin.com/in/mohand-elshahawy-b07523235", label: "LinkedIn", icon: "linkedin" },
+              { href: "mailto:eng.mohand2389@gmail.com", label: "Email", icon: "email" },
+            ]}
+          >
             <a
-              href="https://github.com/enghondaa/portfolio-hub"
-              className="hover:text-[var(--color-neutral-800)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
+              href="mailto:eng.mohand2389@gmail.com"
+              className="select-all font-mono text-xs text-[var(--color-neutral-600)] hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
             >
-              Source on GitHub
+              eng.mohand2389@gmail.com
             </a>
           </Footer>
         </div>

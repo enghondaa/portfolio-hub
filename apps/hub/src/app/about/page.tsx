@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 export const metadata: Metadata = {
   title: "About",
   description: "Mohand Elshahawy — Senior Front-End Engineer, experience and stack.",
+  alternates: { canonical: "/about" },
 };
 
 const skillGroups: { label: string; skills: string[] }[] = [
