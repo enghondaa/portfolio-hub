@@ -40,7 +40,14 @@ describe("Button", () => {
   it("applies the requested variant class", () => {
     render(<Button variant="secondary">Cancel</Button>);
     expect(screen.getByRole("button", { name: "Cancel" }).className).toContain(
-      "neutral-100"
+      "neutral-800"
     );
+  });
+
+  it("renders as a link when href is passed, keeping the same visual classes", () => {
+    render(<Button href="/projects">View projects</Button>);
+    const link = screen.getByRole("link", { name: "View projects" });
+    expect(link).toHaveAttribute("href", "/projects");
+    expect(link.className).toContain("bg-[var(--color-accent)]");
   });
 });
