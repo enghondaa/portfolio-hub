@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { projects, realProjects } from "@/lib/projects";
 import { Reveal } from "@/components/Reveal";
-import { ProjectRow } from "@/components/ProjectRow";
-import { Divider } from "@/components/Divider";
+import { ProjectCard } from "@/components/ProjectCard";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -13,64 +12,60 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+    <div className="mx-auto max-w-[1180px] px-5 py-16 sm:px-14 sm:py-24">
       <Reveal>
-        <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-accent)]">
-          Projects
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-heading)] text-4xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-5xl">
+        <p className="font-mono text-xs text-[var(--color-accent)]">/ work</p>
+        <h1 className="mt-4 font-[family-name:var(--font-heading)] text-[clamp(34px,5vw,64px)] font-bold tracking-[-0.025em] text-[var(--color-neutral-800)]">
           Real work, and demos built the same way
         </h1>
-        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-neutral-600)]">
-          The first four are shipped, in production, for real employers. The
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-neutral-700)]">
+          The first six are shipped, in production, for real employers. The
           four below are demos built to prove specific claims. Status is
           labeled honestly on every one, and each links to real source code.
         </p>
       </Reveal>
 
       <div className="mt-14">
-        <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
           Production work
         </h2>
-        <div className="mt-2">
-          <Divider />
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {realProjects.map((project, i) => (
+            <Reveal key={project.url} delay={i * 0.06}>
+              <ProjectCard
+                index={i}
+                href={project.url}
+                title={project.name.replace(/^https?:\/\//, "")}
+                description={project.description}
+                stack={project.stack}
+                tag={project.tag}
+                featured={project.featured}
+                wide={project.wide}
+                external
+              />
+            </Reveal>
+          ))}
         </div>
-        {realProjects.map((project, i) => (
-          <Reveal key={project.url} delay={i * 0.08}>
-            <ProjectRow
-              index={i}
-              href={project.url}
-              title={project.name}
-              tagline={project.description}
-              stack={project.stack}
-              status="live"
-              outcome={`built at ${project.employer}`}
-              external
-            />
-          </Reveal>
-        ))}
       </div>
 
       <div className="mt-16">
-        <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
           Demos
         </h2>
-        <div className="mt-2">
-          <Divider />
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {projects.map((project, i) => (
+            <Reveal key={project.slug} delay={i * 0.06}>
+              <ProjectCard
+                index={i}
+                href={`/projects/${project.slug}`}
+                title={project.title}
+                description={project.tagline}
+                stack={project.stack}
+                tag={project.tag}
+              />
+            </Reveal>
+          ))}
         </div>
-        {projects.map((project, i) => (
-          <Reveal key={project.slug} delay={i * 0.08}>
-            <ProjectRow
-              index={i}
-              href={`/projects/${project.slug}`}
-              title={project.title}
-              tagline={project.tagline}
-              stack={project.stack}
-              status={project.status}
-              outcome={project.outcome}
-            />
-          </Reveal>
-        ))}
       </div>
     </div>
   );

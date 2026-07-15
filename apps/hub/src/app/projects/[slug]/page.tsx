@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@portfolio/ui";
+import { PillButton } from "@/components/PillButton";
 import { projects, getProject, REPO_URL } from "@/lib/projects";
 
 export function generateStaticParams() {
@@ -51,13 +51,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       />
       <Link
         href="/projects"
-        className="text-sm font-medium text-[var(--color-neutral-600)] hover:text-[var(--color-neutral-800)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
+        className="font-mono text-xs text-[var(--color-neutral-600)] hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
       >
         ← All projects
       </Link>
 
       <div className="mt-6 flex flex-wrap items-baseline gap-3">
-        <h1 className="font-[family-name:var(--font-heading)] text-3xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-4xl">
+        <h1 className="font-[family-name:var(--font-heading)] text-3xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)] sm:text-4xl">
           {project.title}
         </h1>
         <span
@@ -72,25 +72,25 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </div>
       <p className="mt-3 text-lg text-[var(--color-neutral-600)]">{project.tagline}</p>
 
-      <div className="mt-10 aspect-video w-full rounded-lg border border-dashed border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)] flex items-center justify-center">
+      <div className="mt-10 aspect-video w-full rounded-3xl border border-dashed border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)] flex items-center justify-center">
         <p className="font-mono text-sm text-[var(--color-neutral-400)]">Screenshot coming soon</p>
       </div>
 
       <section className="mt-10">
-        <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
           What it does
         </h2>
         <p className="mt-3 leading-relaxed text-[var(--color-neutral-600)]">{project.problem}</p>
       </section>
 
       {project.realWorldNote && (
-        <section className="mt-8 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--color-accent-soft)] p-5">
+        <section className="mt-8 rounded-3xl border border-[var(--color-neutral-200)] bg-[var(--color-accent-soft)] p-5">
           <p className="text-sm leading-relaxed text-[var(--color-neutral-800)]">{project.realWorldNote}</p>
         </section>
       )}
 
       <section className="mt-8">
-        <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
           Stack
         </h2>
         <p className="mt-3 font-mono text-xs text-[var(--color-neutral-600)]">
@@ -98,21 +98,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </p>
       </section>
 
-      <div className="mt-10 flex flex-wrap items-center gap-6">
+      <div className="mt-10 flex flex-wrap items-center gap-3">
         {project.liveUrl && (
-          <Button href={project.liveUrl} target="_blank" rel="noopener noreferrer" arrow>
-            View live demo
-          </Button>
+          <PillButton href={project.liveUrl} variant="accent" external>
+            View live demo →
+          </PillButton>
         )}
-        <Button
-          href={`${REPO_URL}/tree/main/${project.repoPath}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="secondary"
-          arrow
-        >
-          View source
-        </Button>
+        <PillButton href={`${REPO_URL}/tree/main/${project.repoPath}`} variant="outline" external>
+          View source ↗
+        </PillButton>
       </div>
     </div>
   );

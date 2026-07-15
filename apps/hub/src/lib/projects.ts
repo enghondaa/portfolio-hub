@@ -16,6 +16,8 @@ export interface Project {
   realWorldNote?: string;
   /** Short one-line metric for the list view, pulled only from real resume numbers. Omitted when no real metric applies. */
   outcome?: string;
+  /** Short badge shown on the work-grid card. */
+  tag: string;
 }
 
 export const REPO_URL = "https://github.com/enghondaa/portfolio-hub";
@@ -30,6 +32,7 @@ export const projects: Project[] = [
     stack: ["React", "TypeScript", "Next.js", "Zustand", "Node.js", "Express.js"],
     status: "in-progress",
     repoPath: "apps/taskboard",
+    tag: "In progress",
   },
   {
     slug: "analytics",
@@ -43,6 +46,7 @@ export const projects: Project[] = [
     outcome: "the pattern that cut data processing time 60% at Youhue",
     realWorldNote:
       "The pattern is drawn from the analytics dashboards I currently build at Youhue, where similar D3.js/Chart.js work cut data processing time by 60% for a platform serving 150+ schools.",
+    tag: "60% faster",
   },
   {
     slug: "component-library",
@@ -53,6 +57,7 @@ export const projects: Project[] = [
     stack: ["React", "TypeScript", "Tailwind CSS", "Jest", "React Testing Library", "Storybook"],
     status: "live",
     repoPath: "packages/ui",
+    tag: "11 components",
   },
   {
     slug: "cms-demo",
@@ -66,6 +71,7 @@ export const projects: Project[] = [
     outcome: "the same workflow that improved page load speed 45% at Bezoge.com",
     realWorldNote:
       "Builds on the same Next.js + Strapi CMS workflow I used leading a full site redesign at Bezoge.com, which improved page load speed by 45%.",
+    tag: "Zero-code publish",
   },
 ];
 
@@ -79,6 +85,12 @@ export interface RealProject {
   description: string;
   stack: string[];
   employer: string;
+  /** Short badge shown on the work-grid card, e.g. "10K+ users". */
+  tag: string;
+  /** Renders as the dark/high-contrast card in the grid. */
+  featured?: boolean;
+  /** Renders as a full-width row instead of a grid cell. */
+  wide?: boolean;
 }
 
 /** Actual production work, built for real employers. Not demos. */
@@ -89,26 +101,48 @@ export const realProjects: RealProject[] = [
     description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     employer: "AiGentsRealty (part-time)",
-  },
-  {
-    name: "bezogia.com",
-    url: "https://bezogia.com",
-    description: "Cryptocurrency platform optimized for performance and SEO.",
-    stack: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
-    employer: "Bezoge.com",
-  },
-  {
-    name: "zogilabs.io",
-    url: "https://zogilabs.io",
-    description: "Corporate website rebuilt for a 45% improvement in load times.",
-    stack: ["React", "Next.js", "TypeScript"],
-    employer: "Bezoge.com",
+    tag: "AI · PropTech",
   },
   {
     name: "account.zogilabs.io",
     url: "https://account.zogilabs.io",
-    description: "Account management platform with Web3 wallet integration, serving 10,000+ users.",
+    description: "User account management platform with integrated Web3 wallet, serving 10,000+ users.",
     stack: ["React", "TypeScript", "Next.js", "Material-UI", "Web3React"],
     employer: "Bezoge.com",
+    tag: "10K+ users",
+  },
+  {
+    name: "mblk.bezogia.com",
+    url: "https://mblk.bezogia.com",
+    description: "Blockchain marketplace for seamless crypto transactions with real-time pricing.",
+    stack: ["React", "Next.js", "TypeScript", "Web3React"],
+    employer: "Bezoge.com",
+    tag: "Marketplace",
+  },
+  {
+    name: "bezogia.com",
+    url: "https://bezogia.com",
+    description: "Main cryptocurrency platform, optimized for performance and SEO.",
+    stack: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
+    employer: "Bezoge.com",
+    tag: "+45% speed",
+    featured: true,
+  },
+  {
+    name: "zogilabs.io",
+    url: "https://zogilabs.io",
+    description: "Corporate site with a modern responsive design and 45% faster loads.",
+    stack: ["React", "Next.js", "TypeScript"],
+    employer: "Bezoge.com",
+    tag: "Corporate",
+  },
+  {
+    name: "petzogi-web-eta.vercel.app",
+    url: "https://petzogi-web-eta.vercel.app",
+    description: "NFT minting platform with custom smart-contract integration.",
+    stack: ["React", "Next.js", "TypeScript", "Web3React"],
+    employer: "Bezoge.com",
+    tag: "NFT · Gaming",
+    wide: true,
   },
 ];

@@ -5,8 +5,9 @@
  *   @import "tailwindcss";
  *   @import "@portfolio/config/tailwind/theme.css";
  *
- * Visual direction: minimal, editorial, confident. Generous whitespace,
- * strong typographic hierarchy, one accent color on a neutral palette.
+ * Visual direction: warm, confident, editorial-modern. Cream paper
+ * background, warm charcoal ink, one amber accent, soft oversized shadows.
+ * Sourced from Mohand's "Portfolio C - Warm Modern" design (Claude Design).
  * Full component-level tokens are layered on top in packages/ui (Phase 1).
  * Font families are set per-app via next/font and exposed as CSS variables
  * (--font-heading, --font-body, --font-mono); this file just wires the
@@ -42,31 +43,19 @@
   --font-heading: var(--font-heading, ui-sans-serif, system-ui, sans-serif);
   --font-mono: var(--font-mono, ui-monospace, SFMono-Regular, monospace);
 
-  /* Neutral palette + one restrained accent, light theme defaults */
-  --color-neutral-0: #ffffff;
-  --color-neutral-50: #f7f7f6;
-  --color-neutral-100: #ececea;
-  --color-neutral-200: #d9d8d4;
-  --color-neutral-400: #98968f;
-  --color-neutral-600: #5f5d57;
-  --color-neutral-800: #2b2a27;
-  --color-neutral-950: #121210;
+  /* Warm palette: cream paper, warm charcoal ink, one amber accent. */
+  --color-neutral-0: #f7f1e8;   /* page background (cream) */
+  --color-neutral-50: #fffdf8;  /* card background (warm white) */
+  --color-neutral-100: #f4ead8; /* tag/chip background */
+  --color-neutral-200: rgba(42, 32, 23, 0.1); /* hairline borders */
+  --color-neutral-400: #b3a594; /* faint/placeholder text */
+  --color-neutral-600: #7a6e60; /* secondary text */
+  --color-neutral-700: #5c5142; /* body copy */
+  --color-neutral-800: #2a2017; /* primary ink + dark surfaces */
+  --color-neutral-950: #201811; /* darkest surface (contact CTA, dark cards) */
 
-  --color-accent: #b45309; /* burnt amber, used sparingly */
-  --color-accent-soft: #fef3c7;
-}
-
-/* Dark theme overrides, toggled via a `.dark` class on <html> */
-.dark {
-  --color-neutral-0: #121210;
-  --color-neutral-50: #1a1a17;
-  --color-neutral-100: #242320;
-  --color-neutral-200: #35332e;
-  --color-neutral-400: #7d7b73;
-  --color-neutral-600: #a8a69e;
-  --color-neutral-800: #e4e2dc;
-  --color-neutral-950: #f7f7f6;
-
-  --color-accent: #d97a2b;
-  --color-accent-soft: #3a2a12;
+  --color-accent: #e08a2c;      /* warm amber */
+  --color-accent-light: #f0b35f; /* amber, for text on dark surfaces */
+  --color-accent-soft: #f4ead8;  /* accent-tinted chip background */
+  --color-success: #3da35d;     /* "available" status dot */
 }

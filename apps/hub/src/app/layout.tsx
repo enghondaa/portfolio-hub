@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
-import { Footer } from "@portfolio/ui";
+import { Bricolage_Grotesque, Hanken_Grotesk, DM_Mono } from "next/font/google";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { SiteNavbar } from "@/components/SiteNavbar";
+import { FloatingNavbar } from "@/components/FloatingNavbar";
+import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-heading",
   display: "swap",
 });
 
-const inter = Inter({
+const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const dmMono = DM_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-mono",
@@ -52,25 +52,6 @@ export const metadata: Metadata = {
   },
 };
 
-const navLinks = [
-  { href: "/projects", label: "Projects" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
-
-// Runs before paint so the correct theme is set before first render, no flash.
-const themeInitScript = `
-(function () {
-  try {
-    var stored = window.localStorage.getItem("portfolio-theme");
-    var theme = stored === "light" || stored === "dark"
-      ? stored
-      : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    if (theme === "dark") document.documentElement.classList.add("dark");
-  } catch (e) {}
-})();
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -78,43 +59,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body
-        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} bg-[var(--color-neutral-0)] font-sans text-[var(--color-neutral-800)] antialiased`}
+        className={`${bricolageGrotesque.variable} ${hankenGrotesk.variable} ${dmMono.variable} bg-[var(--color-neutral-0)] font-sans text-[var(--color-neutral-800)] antialiased`}
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          }}
-        />
         <ScrollProgress />
+        <FloatingNavbar />
         <div className="relative flex min-h-screen flex-col">
-          <SiteNavbar brand="Mohand Elshahawy" links={navLinks} />
           <main className="flex-1">{children}</main>
-          <Footer
-            brand="Mohand Elshahawy"
-            tagline="Full-Stack Developer"
-            availabilityLine="Available for freelance projects. I reply within a day."
-            copyright={`© ${new Date().getFullYear()} Mohand Elshahawy`}
-            links={navLinks}
-            social={[
-              { href: "https://github.com/enghondaa/portfolio-hub", label: "GitHub", icon: "github" },
-              { href: "https://linkedin.com/in/mohand-elshahawy-b07523235", label: "LinkedIn", icon: "linkedin" },
-              { href: "mailto:eng.mohand2389@gmail.com", label: "Email", icon: "email" },
-            ]}
-          >
-            <a
-              href="mailto:eng.mohand2389@gmail.com"
-              className="select-all font-mono text-xs text-[var(--color-neutral-600)] hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
-            >
-              eng.mohand2389@gmail.com
-            </a>
-          </Footer>
+          <SiteFooter />
         </div>
       </body>
     </html>

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@portfolio/ui";
-import { projects } from "@/lib/projects";
+import { realProjects } from "@/lib/projects";
 import { Reveal } from "@/components/Reveal";
-import { MagneticLink } from "@/components/MagneticLink";
 import { HeroIntro } from "@/components/HeroIntro";
-import { ProjectRow } from "@/components/ProjectRow";
-import { LiveChartWidget } from "@/components/LiveChartWidget";
-import { Divider } from "@/components/Divider";
+import { HeroStats } from "@/components/HeroStats";
+import { ProjectCard } from "@/components/ProjectCard";
+import { AboutTeaser } from "@/components/AboutTeaser";
+import { LiveDemos } from "@/components/LiveDemos";
+import { CapabilitiesChips } from "@/components/CapabilitiesChips";
+import { ContactCTA } from "@/components/ContactCTA";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -32,49 +33,53 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-      <HeroIntro>
-        <MagneticLink>
-          <Button href="/projects" arrow>
-            View projects
-          </Button>
-        </MagneticLink>
-        <Button href="/contact" variant="secondary" arrow>
-          Get in touch
-        </Button>
-      </HeroIntro>
 
-      <LiveChartWidget />
+      <section className="mx-auto max-w-[1180px] px-5 pb-6 pt-[clamp(120px,17vh,190px)] sm:px-14">
+        <HeroIntro />
+      </section>
 
-      <div className="mt-24 flex items-baseline justify-between pb-4">
-        <h2 className="font-[family-name:var(--font-heading)] text-2xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
-          Featured work
-        </h2>
-        <Link
-          href="/projects"
-          className="font-mono text-xs uppercase tracking-wider text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
-        >
-          See all
-        </Link>
-      </div>
-      <Divider />
+      <section className="mx-auto max-w-[1180px] px-5 pb-16 pt-2 sm:px-14 sm:pb-24">
+        <HeroStats />
+      </section>
 
-      <div>
-        {projects.map((project, i) => (
-          <Reveal key={project.slug} delay={i * 0.08}>
-            <ProjectRow
-              index={i}
-              href={`/projects/${project.slug}`}
-              title={project.title}
-              tagline={project.tagline}
-              stack={project.stack}
-              status={project.status}
-              outcome={project.outcome}
-            />
-          </Reveal>
-        ))}
-      </div>
-    </div>
-  </>
+      <AboutTeaser />
+
+      <section id="work" className="mx-auto max-w-[1180px] scroll-mt-24 px-5 pb-16 sm:px-14 sm:pb-24">
+        <Reveal>
+          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-2.5">
+            <h2 className="font-[family-name:var(--font-heading)] text-[clamp(30px,4.4vw,56px)] font-bold tracking-[-0.025em] text-[var(--color-neutral-800)]">
+              Selected work
+            </h2>
+            <Link href="/projects" className="font-mono text-xs text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded">
+              See all →
+            </Link>
+          </div>
+        </Reveal>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {realProjects.map((project, i) => (
+            <Reveal key={project.url} delay={i * 0.06}>
+              <ProjectCard
+                index={i}
+                href={project.url}
+                title={project.name.replace(/^https?:\/\//, "")}
+                description={project.description}
+                stack={project.stack}
+                tag={project.tag}
+                featured={project.featured}
+                wide={project.wide}
+                external
+              />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <LiveDemos />
+      <CapabilitiesChips />
+
+      <section className="mx-auto max-w-[1180px] px-5 py-16 sm:px-14 sm:py-24">
+        <ContactCTA />
+      </section>
+    </>
   );
 }

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Badge } from "@portfolio/ui";
 import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
@@ -63,15 +62,15 @@ const education = [
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+    <div className="mx-auto max-w-3xl px-5 py-16 sm:px-6 sm:py-24">
       <Reveal>
-        <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-accent)]">About</p>
-        <h1 className="mt-3 font-[family-name:var(--font-heading)] text-4xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-5xl">
+        <p className="font-mono text-xs text-[var(--color-accent)]">/ about</p>
+        <h1 className="mt-4 font-[family-name:var(--font-heading)] text-4xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)] sm:text-5xl">
           Mohand Elshahawy
         </h1>
-        <p className="mt-2 text-[var(--color-neutral-600)]">Full-Stack Developer · Giza, Egypt</p>
+        <p className="mt-2 font-mono text-sm text-[var(--color-neutral-600)]">Full-Stack Developer · Giza, Egypt</p>
 
-        <div className="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-neutral-600)]">
+        <div className="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-neutral-700)]">
           <p>
             Five years delivering React-based applications for international
             teams across Web3, crypto, and EdTech. I&apos;ve built
@@ -85,23 +84,26 @@ export default function AboutPage() {
 
       <Reveal delay={0.05}>
         <section className="mt-16">
-          <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+          <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
             Experience
           </h2>
-          <div className="mt-6 space-y-10">
+          <div className="mt-6 flex flex-col gap-4">
             {experience.map((job) => (
-              <div key={job.company + job.period}>
+              <div
+                key={job.company + job.period}
+                className="rounded-[22px] border border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)] p-6 shadow-[0_22px_50px_-34px_rgba(90,55,20,0.5)] sm:p-8"
+              >
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <h3 className="font-medium text-[var(--color-neutral-800)]">
-                    {job.role} · {job.company}
+                  <h3 className="font-[family-name:var(--font-heading)] font-bold text-[var(--color-neutral-800)]">
+                    {job.role} <span className="font-medium text-[var(--color-neutral-400)]">· {job.company}</span>
                   </h3>
-                  <span className="font-mono text-xs text-[var(--color-neutral-400)]">{job.period}</span>
+                  <span className="font-mono text-xs text-[var(--color-accent)]">{job.period}</span>
                 </div>
-                <p className="text-sm text-[var(--color-neutral-400)]">{job.location}</p>
-                <ul className="mt-3 space-y-2">
+                <p className="mt-1 text-sm text-[var(--color-neutral-600)]">{job.location}</p>
+                <ul className="mt-4 flex flex-col gap-2.5">
                   {job.bullets.map((bullet) => (
-                    <li key={bullet} className="flex gap-3 text-[var(--color-neutral-600)]">
-                      <span aria-hidden="true" className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-[var(--color-neutral-400)]" />
+                    <li key={bullet} className="flex gap-2.5 text-[15px] leading-relaxed text-[var(--color-neutral-700)]">
+                      <span aria-hidden="true" className="text-[var(--color-accent)]">→</span>
                       <span>{bullet}</span>
                     </li>
                   ))}
@@ -114,8 +116,8 @@ export default function AboutPage() {
 
       <Reveal delay={0.1}>
         <section className="mt-16">
-          <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
-            Education & certifications
+          <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
+            Education &amp; certifications
           </h2>
           <ul className="mt-6 space-y-3">
             {education.map((item) => (
@@ -132,18 +134,21 @@ export default function AboutPage() {
 
       <Reveal delay={0.15}>
         <section className="mt-16">
-          <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+          <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
             Stack
           </h2>
           <div className="mt-6 space-y-5">
             {skillGroups.map((group) => (
               <div key={group.label}>
                 <h3 className="text-sm font-medium text-[var(--color-neutral-800)]">{group.label}</h3>
-                <div className="mt-2 flex flex-wrap gap-1.5">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {group.skills.map((skill) => (
-                    <Badge key={skill} tone="neutral" className="font-mono text-xs">
+                    <span
+                      key={skill}
+                      className="rounded-2xl bg-[var(--color-neutral-100)] px-3.5 py-1.5 font-mono text-xs text-[var(--color-neutral-700)]"
+                    >
                       {skill}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               </div>
