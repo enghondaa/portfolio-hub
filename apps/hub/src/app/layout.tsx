@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { Navbar, Footer, ThemeToggle } from "@portfolio/ui";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -29,24 +30,24 @@ const siteUrl = "https://mohand-hub.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Mohand Elshahawy — Full-Stack MERN Developer",
+    default: "Mohand Elshahawy — Senior Front-End Engineer",
     template: "%s — Mohand Elshahawy",
   },
   description:
-    "Portfolio and live demo apps for Mohand Elshahawy, a full-stack MERN developer. Real projects, real code, real deployed URLs.",
+    "Portfolio and live demo apps for Mohand Elshahawy, a Senior Front-End Engineer. Real production work, real demos, real deployed URLs.",
   openGraph: {
     type: "website",
     url: siteUrl,
     siteName: "Mohand Elshahawy",
-    title: "Mohand Elshahawy — Full-Stack MERN Developer",
+    title: "Mohand Elshahawy — Senior Front-End Engineer",
     description:
-      "Portfolio and live demo apps for Mohand Elshahawy, a full-stack MERN developer. Real projects, real code, real deployed URLs.",
+      "Portfolio and live demo apps for Mohand Elshahawy, a Senior Front-End Engineer. Real production work, real demos, real deployed URLs.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohand Elshahawy — Full-Stack MERN Developer",
+    title: "Mohand Elshahawy — Senior Front-End Engineer",
     description:
-      "Portfolio and live demo apps for Mohand Elshahawy, a full-stack MERN developer.",
+      "Portfolio and live demo apps for Mohand Elshahawy, a Senior Front-End Engineer.",
   },
 };
 
@@ -82,7 +83,16 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} bg-[var(--color-neutral-0)] font-sans text-[var(--color-neutral-800)] antialiased`}
       >
-        <div className="flex min-h-screen flex-col">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          }}
+        />
+        <ScrollProgress />
+        <div className="relative flex min-h-screen flex-col">
           <Navbar
             brand="Mohand Elshahawy"
             links={navLinks}
