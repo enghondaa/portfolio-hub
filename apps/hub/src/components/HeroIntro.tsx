@@ -33,7 +33,7 @@ export function HeroIntro({ children }: { children: ReactNode }) {
           variants={item}
           className="font-mono text-sm uppercase tracking-widest text-[var(--color-accent)]"
         >
-          Senior Front-End Engineer
+          Full-Stack Developer
         </motion.p>
         <motion.h1
           variants={item}

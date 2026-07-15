@@ -16,7 +16,7 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Mohand Elshahawy",
-  jobTitle: "Senior Front-End Engineer",
+  jobTitle: "Full-Stack Developer",
   url: "https://mohand-hub.vercel.app",
   sameAs: [
     "https://github.com/enghondaa",

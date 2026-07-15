@@ -31,24 +31,24 @@ const siteUrl = "https://mohand-hub.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Mohand Elshahawy — Senior Front-End Engineer",
+    default: "Mohand Elshahawy — Full-Stack Developer",
     template: "%s — Mohand Elshahawy",
   },
   description:
-    "Portfolio and live demo apps for Mohand Elshahawy, a Senior Front-End Engineer. Real production work, real demos, real deployed URLs.",
+    "Portfolio and live demo apps for Mohand Elshahawy, a Full-Stack Developer. Real production work, real demos, real deployed URLs.",
   openGraph: {
     type: "website",
     url: siteUrl,
     siteName: "Mohand Elshahawy",
-    title: "Mohand Elshahawy — Senior Front-End Engineer",
+    title: "Mohand Elshahawy — Full-Stack Developer",
     description:
-      "Portfolio and live demo apps for Mohand Elshahawy, a Senior Front-End Engineer. Real production work, real demos, real deployed URLs.",
+      "Portfolio and live demo apps for Mohand Elshahawy, a Full-Stack Developer. Real production work, real demos, real deployed URLs.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mohand Elshahawy — Senior Front-End Engineer",
+    title: "Mohand Elshahawy — Full-Stack Developer",
     description:
-      "Portfolio and live demo apps for Mohand Elshahawy, a Senior Front-End Engineer.",
+      "Portfolio and live demo apps for Mohand Elshahawy, a Full-Stack Developer.",
   },
 };
 
@@ -98,7 +98,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer
             brand="Mohand Elshahawy"
-            tagline="Senior Front-End Engineer"
+            tagline="Full-Stack Developer"
             copyright={`© ${new Date().getFullYear()} Mohand Elshahawy`}
             links={navLinks}
             social={[

@@ -4,7 +4,7 @@ import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Mohand Elshahawy — Senior Front-End Engineer, experience and stack.",
+  description: "Mohand Elshahawy — Full-Stack Developer, experience and stack.",
   alternates: { canonical: "/about" },
 };
 
@@ -69,7 +69,7 @@ export default function AboutPage() {
         <h1 className="mt-3 font-[family-name:var(--font-heading)] text-4xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-5xl">
           Mohand Elshahawy
         </h1>
-        <p className="mt-2 text-[var(--color-neutral-600)]">Senior Front-End Engineer · Giza, Egypt</p>
+        <p className="mt-2 text-[var(--color-neutral-600)]">Full-Stack Developer · Giza, Egypt</p>
 
         <div className="mt-6 space-y-5 text-lg leading-relaxed text-[var(--color-neutral-600)]">
           <p>

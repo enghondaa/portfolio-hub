@@ -22,7 +22,7 @@ export default function Image() {
         }}
       >
         <div style={{ display: "flex", fontSize: 28, color: "#d97a2b", letterSpacing: 2, textTransform: "uppercase" }}>
-          Senior Front-End Engineer
+          Full-Stack Developer
         </div>
         <div style={{ display: "flex", marginTop: 24, fontSize: 72, fontWeight: 600, letterSpacing: -1 }}>
           Mohand Elshahawy

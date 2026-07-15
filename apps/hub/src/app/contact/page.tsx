@@ -5,7 +5,7 @@ const CONTACT_EMAIL = "eng.mohand2389@gmail.com";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Mohand Elshahawy — Senior Front-End Engineer.",
+  description: "Get in touch with Mohand Elshahawy — Full-Stack Developer.",
   alternates: { canonical: "/contact" },
 };
 
