@@ -1,55 +1,108 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from "@portfolio/ui";
-import { projects } from "@/lib/projects";
+import { Badge } from "@portfolio/ui";
+import { projects, realProjects } from "@/lib/projects";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
-    "Live demo apps proving a real MERN stack: a task board, an analytics dashboard, a component library, and a CMS site.",
+    "Real production work plus live demo apps proving a real front-end stack: a task board, an analytics dashboard, a component library, and a CMS site.",
 };
 
 export default function ProjectsPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
-      <p className="font-mono text-sm uppercase tracking-wide text-[var(--color-accent)]">
-        Projects
-      </p>
-      <h1 className="mt-3 font-[family-name:var(--font-heading)] text-3xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-4xl">
-        Four demos, one stack
-      </h1>
-      <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-neutral-600)]">
-        Each one is built to prove a specific claim from my resume. Some are
-        further along than others — status is labeled honestly on every
-        card, and every one links to real source code.
-      </p>
+    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+      <Reveal>
+        <p className="font-mono text-sm uppercase tracking-widest text-[var(--color-accent)]">
+          Projects
+        </p>
+        <h1 className="mt-3 font-[family-name:var(--font-heading)] text-4xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-5xl">
+          Real work, and demos built the same way
+        </h1>
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-neutral-600)]">
+          The first three are shipped, in production, for real employers. The
+          four below are demos built to prove specific claims — status is
+          labeled honestly on every one, and each links to real source code.
+        </p>
+      </Reveal>
 
-      <div className="mt-12 grid gap-5 sm:grid-cols-2">
-        {projects.map((project) => (
-          <Link
-            key={project.slug}
-            href={`/projects/${project.slug}`}
-            className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
-          >
-            <Card className="h-full transition-colors hover:border-[var(--color-neutral-400)]">
-              <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
-                <CardTitle>{project.title}</CardTitle>
-                <Badge tone={project.status === "live" ? "success" : "neutral"}>
+      <div className="mt-14">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+          Production work
+        </h2>
+        <div className="mt-2 border-b border-[var(--color-neutral-200)]" />
+        {realProjects.map((project, i) => (
+          <Reveal key={project.url} delay={i * 0.05}>
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between gap-6 border-b border-[var(--color-neutral-200)] py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            >
+              <div className="flex items-baseline gap-5 sm:gap-8">
+                <span className="font-mono text-sm text-[var(--color-neutral-400)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)] transition-colors group-hover:text-[var(--color-accent)] sm:text-2xl">
+                    {project.name}
+                  </h3>
+                  <p className="mt-1 text-[var(--color-neutral-600)]">{project.description}</p>
+                  <p className="mt-1 font-mono text-xs text-[var(--color-neutral-400)]">
+                    {project.stack.join(" · ")} — built at {project.employer}
+                  </p>
+                </div>
+              </div>
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-[var(--color-neutral-400)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
+              >
+                ↗
+              </span>
+            </a>
+          </Reveal>
+        ))}
+      </div>
+
+      <div className="mt-16">
+        <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
+          Demos
+        </h2>
+        <div className="mt-2 border-b border-[var(--color-neutral-200)]" />
+        {projects.map((project, i) => (
+          <Reveal key={project.slug} delay={i * 0.05}>
+            <Link
+              href={`/projects/${project.slug}`}
+              className="group flex items-center justify-between gap-6 border-b border-[var(--color-neutral-200)] py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            >
+              <div className="flex items-baseline gap-5 sm:gap-8">
+                <span className="font-mono text-sm text-[var(--color-neutral-400)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)] transition-colors group-hover:text-[var(--color-accent)] sm:text-2xl">
+                    {project.title}
+                  </h3>
+                  <p className="mt-1 text-[var(--color-neutral-600)]">{project.tagline}</p>
+                  <p className="mt-1 font-mono text-xs text-[var(--color-neutral-400)]">
+                    {project.stack.join(" · ")}
+                  </p>
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-4">
+                <Badge tone={project.status === "live" ? "success" : "neutral"} className="hidden sm:inline-flex">
                   {project.status === "live" ? "Live" : "In progress"}
                 </Badge>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <CardDescription>{project.tagline}</CardDescription>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.stack.slice(0, 4).map((tech) => (
-                    <Badge key={tech} tone="neutral" className="font-mono text-xs">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+                <span
+                  aria-hidden="true"
+                  className="text-[var(--color-neutral-400)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
+                >
+                  →
+                </span>
+              </div>
+            </Link>
+          </Reveal>
         ))}
       </div>
     </div>
