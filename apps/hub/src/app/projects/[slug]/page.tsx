@@ -1,32 +1,54 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Badge } from "@portfolio/ui";
+import { Button } from "@portfolio/ui";
 import { projects, getProject, REPO_URL } from "@/lib/projects";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
-}): Metadata {
-  const project = getProject(params.slug);
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProject(slug);
   if (!project) return {};
   return {
-    title: project.title,
+    title: `${project.title} case study`,
     description: project.tagline,
+    alternates: { canonical: `/projects/${project.slug}` },
   };
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = getProject(params.slug);
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = getProject(slug);
   if (!project) notFound();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.title,
+    description: project.tagline,
+    applicationCategory: "WebApplication",
+    url: `https://mohand-hub.vercel.app/projects/${project.slug}`,
+    ...(project.liveUrl ? { sameAs: [project.liveUrl] } : {}),
+    author: {
+      "@type": "Person",
+      name: "Mohand Elshahawy",
+      url: "https://mohand-hub.vercel.app",
+    },
+  };
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Link
         href="/projects"
         className="text-sm font-medium text-[var(--color-neutral-600)] hover:text-[var(--color-neutral-800)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
@@ -34,13 +56,19 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         ← All projects
       </Link>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-6 flex flex-wrap items-baseline gap-3">
         <h1 className="font-[family-name:var(--font-heading)] text-3xl font-semibold tracking-tight text-[var(--color-neutral-800)] sm:text-4xl">
           {project.title}
         </h1>
-        <Badge tone={project.status === "live" ? "success" : "neutral"}>
+        <span
+          className={
+            project.status === "live"
+              ? "font-mono text-xs uppercase tracking-wider text-[var(--color-accent)]"
+              : "font-mono text-xs uppercase tracking-wider text-[var(--color-neutral-400)]"
+          }
+        >
           {project.status === "live" ? "Live" : "In progress"}
-        </Badge>
+        </span>
       </div>
       <p className="mt-3 text-lg text-[var(--color-neutral-600)]">{project.tagline}</p>
 
@@ -65,34 +93,26 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         <h2 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
           Stack
         </h2>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {project.stack.map((tech) => (
-            <Badge key={tech} tone="accent" className="font-mono text-xs">
-              {tech}
-            </Badge>
-          ))}
-        </div>
+        <p className="mt-3 font-mono text-xs text-[var(--color-neutral-600)]">
+          {project.stack.join(" · ")}
+        </p>
       </section>
 
-      <div className="mt-10 flex flex-wrap gap-3">
+      <div className="mt-10 flex flex-wrap items-center gap-6">
         {project.liveUrl && (
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--color-accent)] px-4 text-base font-medium text-[var(--color-neutral-0)] transition-colors duration-150 ease-out hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-neutral-0)]"
-          >
+          <Button href={project.liveUrl} target="_blank" rel="noopener noreferrer" arrow>
             View live demo
-          </a>
+          </Button>
         )}
-        <a
+        <Button
           href={`${REPO_URL}/tree/main/${project.repoPath}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--color-neutral-100)] px-4 text-base font-medium text-[var(--color-neutral-800)] transition-colors duration-150 ease-out hover:bg-[var(--color-neutral-200)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-neutral-0)]"
+          variant="secondary"
+          arrow
         >
           View source
-        </a>
+        </Button>
       </div>
     </div>
   );
