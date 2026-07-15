@@ -11,6 +11,8 @@ export interface NavLink {
 export interface NavbarProps {
   brand: ReactNode;
   links: NavLink[];
+  /** Current path, e.g. from next/navigation's usePathname(). Highlights the matching link. */
+  activeHref?: string;
   /** Rendered at the end of the nav, e.g. a ThemeToggle. */
   actions?: ReactNode;
   className?: string;
@@ -21,7 +23,7 @@ export interface NavbarProps {
  * md breakpoint: a single button with aria-expanded toggles a visible panel,
  * and every link remains reachable by keyboard.
  */
-export function Navbar({ brand, links, actions, className }: NavbarProps) {
+export function Navbar({ brand, links, activeHref, actions, className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -37,15 +39,29 @@ export function Navbar({ brand, links, actions, className }: NavbarProps) {
         </div>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="font-mono text-xs uppercase tracking-wider text-[var(--color-neutral-600)] hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+          {links.map((link) => {
+            const isActive = activeHref === link.href;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "group relative font-mono text-xs uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded",
+                  isActive ? "text-[var(--color-accent)]" : "text-[var(--color-neutral-600)] hover:text-[var(--color-accent)]"
+                )}
+              >
+                {link.label}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute -bottom-1 left-0 h-px w-full origin-left bg-current transition-transform duration-200 ease-out",
+                    isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  )}
+                />
+              </a>
+            );
+          })}
           {actions}
         </nav>
 
