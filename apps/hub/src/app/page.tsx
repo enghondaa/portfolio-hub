@@ -1,27 +1,49 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge } from "@portfolio/ui";
+import { Button } from "@portfolio/ui";
 import { projects } from "@/lib/projects";
 import { Reveal } from "@/components/Reveal";
 import { MagneticLink } from "@/components/MagneticLink";
 import { HeroIntro } from "@/components/HeroIntro";
+import { ProjectRow } from "@/components/ProjectRow";
+import { LiveChartWidget } from "@/components/LiveChartWidget";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Mohand Elshahawy",
+  jobTitle: "Senior Front-End Engineer",
+  url: "https://mohand-hub.vercel.app",
+  sameAs: [
+    "https://github.com/enghondaa",
+    "https://linkedin.com/in/mohand-elshahawy-b07523235",
+  ],
+};
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
       <HeroIntro>
-        <MagneticLink
-          href="/projects"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[var(--color-accent)] px-5 text-base font-medium text-[var(--color-neutral-0)] transition-colors duration-150 ease-out hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-neutral-0)]"
-        >
-          View projects <span aria-hidden="true">→</span>
+        <MagneticLink>
+          <Button href="/projects" arrow>
+            View projects
+          </Button>
         </MagneticLink>
-        <Link
-          href="/contact"
-          className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--color-neutral-100)] px-5 text-base font-medium text-[var(--color-neutral-800)] transition-colors duration-150 ease-out hover:bg-[var(--color-neutral-200)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-neutral-0)]"
-        >
+        <Button href="/contact" variant="secondary" arrow>
           Get in touch
-        </Link>
+        </Button>
       </HeroIntro>
+
+      <LiveChartWidget />
 
       <div className="mt-24 flex items-baseline justify-between border-b border-[var(--color-neutral-200)] pb-4">
         <h2 className="font-[family-name:var(--font-heading)] text-2xl font-semibold tracking-tight text-[var(--color-neutral-800)]">
@@ -38,36 +60,19 @@ export default function Home() {
       <div>
         {projects.map((project, i) => (
           <Reveal key={project.slug} delay={i * 0.05}>
-            <Link
+            <ProjectRow
+              index={i}
               href={`/projects/${project.slug}`}
-              className="group flex items-center justify-between gap-6 border-b border-[var(--color-neutral-200)] py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
-            >
-              <div className="flex items-baseline gap-5 sm:gap-8">
-                <span className="font-mono text-sm text-[var(--color-neutral-400)]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)] transition-colors group-hover:text-[var(--color-accent)] sm:text-2xl">
-                    {project.title}
-                  </h3>
-                  <p className="mt-1 text-[var(--color-neutral-600)]">{project.tagline}</p>
-                </div>
-              </div>
-              <div className="flex shrink-0 items-center gap-4">
-                <Badge tone={project.status === "live" ? "success" : "neutral"} className="hidden sm:inline-flex">
-                  {project.status === "live" ? "Live" : "In progress"}
-                </Badge>
-                <span
-                  aria-hidden="true"
-                  className="text-[var(--color-neutral-400)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
-                >
-                  →
-                </span>
-              </div>
-            </Link>
+              title={project.title}
+              tagline={project.tagline}
+              stack={project.stack}
+              status={project.status}
+              outcome={project.outcome}
+            />
           </Reveal>
         ))}
       </div>
     </div>
+  </>
   );
 }

@@ -14,6 +14,8 @@ export interface Project {
   repoPath: string;
   /** A real, verifiable result from paid work this demo's pattern is based on (optional). */
   realWorldNote?: string;
+  /** Short one-line metric for the list view, pulled only from real resume numbers. Omitted when no real metric applies. */
+  outcome?: string;
 }
 
 export const REPO_URL = "https://github.com/enghondaa/portfolio-hub";
@@ -38,6 +40,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "TypeScript", "D3.js", "Chart.js", "Zustand", "Tailwind CSS"],
     status: "in-progress",
     repoPath: "apps/analytics",
+    outcome: "the pattern that cut data processing time 60% at Youhue",
     realWorldNote:
       "The pattern is drawn from the analytics dashboards I currently build at Youhue, where similar D3.js/Chart.js work cut data processing time by 60% for a platform serving 150+ schools.",
   },
@@ -60,6 +63,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "TypeScript", "MDX", "Tailwind CSS"],
     status: "in-progress",
     repoPath: "apps/cms-demo",
+    outcome: "the same workflow that improved page load speed 45% at Bezoge.com",
     realWorldNote:
       "Builds on the same Next.js + Strapi CMS workflow I used leading a full site redesign at Bezoge.com, which improved page load speed by 45%.",
   },
@@ -99,5 +103,12 @@ export const realProjects: RealProject[] = [
     description: "Account management platform with Web3 wallet integration, serving 10,000+ users.",
     stack: ["React", "TypeScript", "Next.js", "Material-UI", "Web3React"],
     employer: "Bezoge.com",
+  },
+  {
+    name: "aigentsrealty.com",
+    url: "https://www.aigentsrealty.com",
+    description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    employer: "AiGentsRealty (part-time)",
   },
 ];

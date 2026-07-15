@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Badge } from "@portfolio/ui";
 import { projects, realProjects } from "@/lib/projects";
 import { Reveal } from "@/components/Reveal";
+import { ProjectRow } from "@/components/ProjectRow";
 
 export const metadata: Metadata = {
   title: "Projects",
   description:
     "Real production work plus live demo apps proving a real front-end stack: a task board, an analytics dashboard, a component library, and a CMS site.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {
@@ -22,7 +22,7 @@ export default function ProjectsPage() {
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-neutral-600)]">
           The first three are shipped, in production, for real employers. The
-          four below are demos built to prove specific claims — status is
+          four below are demos built to prove specific claims. Status is
           labeled honestly on every one, and each links to real source code.
         </p>
       </Reveal>
@@ -34,33 +34,16 @@ export default function ProjectsPage() {
         <div className="mt-2 border-b border-[var(--color-neutral-200)]" />
         {realProjects.map((project, i) => (
           <Reveal key={project.url} delay={i * 0.05}>
-            <a
+            <ProjectRow
+              index={i}
               href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center justify-between gap-6 border-b border-[var(--color-neutral-200)] py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
-            >
-              <div className="flex items-baseline gap-5 sm:gap-8">
-                <span className="font-mono text-sm text-[var(--color-neutral-400)]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)] transition-colors group-hover:text-[var(--color-accent)] sm:text-2xl">
-                    {project.name}
-                  </h3>
-                  <p className="mt-1 text-[var(--color-neutral-600)]">{project.description}</p>
-                  <p className="mt-1 font-mono text-xs text-[var(--color-neutral-400)]">
-                    {project.stack.join(" · ")} — built at {project.employer}
-                  </p>
-                </div>
-              </div>
-              <span
-                aria-hidden="true"
-                className="shrink-0 text-[var(--color-neutral-400)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
-              >
-                ↗
-              </span>
-            </a>
+              title={project.name}
+              tagline={project.description}
+              stack={project.stack}
+              status="live"
+              outcome={`built at ${project.employer}`}
+              external
+            />
           </Reveal>
         ))}
       </div>
@@ -72,36 +55,15 @@ export default function ProjectsPage() {
         <div className="mt-2 border-b border-[var(--color-neutral-200)]" />
         {projects.map((project, i) => (
           <Reveal key={project.slug} delay={i * 0.05}>
-            <Link
+            <ProjectRow
+              index={i}
               href={`/projects/${project.slug}`}
-              className="group flex items-center justify-between gap-6 border-b border-[var(--color-neutral-200)] py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
-            >
-              <div className="flex items-baseline gap-5 sm:gap-8">
-                <span className="font-mono text-sm text-[var(--color-neutral-400)]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 className="font-[family-name:var(--font-heading)] text-xl font-semibold tracking-tight text-[var(--color-neutral-800)] transition-colors group-hover:text-[var(--color-accent)] sm:text-2xl">
-                    {project.title}
-                  </h3>
-                  <p className="mt-1 text-[var(--color-neutral-600)]">{project.tagline}</p>
-                  <p className="mt-1 font-mono text-xs text-[var(--color-neutral-400)]">
-                    {project.stack.join(" · ")}
-                  </p>
-                </div>
-              </div>
-              <div className="flex shrink-0 items-center gap-4">
-                <Badge tone={project.status === "live" ? "success" : "neutral"} className="hidden sm:inline-flex">
-                  {project.status === "live" ? "Live" : "In progress"}
-                </Badge>
-                <span
-                  aria-hidden="true"
-                  className="text-[var(--color-neutral-400)] transition-transform duration-150 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
-                >
-                  →
-                </span>
-              </div>
-            </Link>
+              title={project.title}
+              tagline={project.tagline}
+              stack={project.stack}
+              status={project.status}
+              outcome={project.outcome}
+            />
           </Reveal>
         ))}
       </div>
