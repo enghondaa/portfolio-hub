@@ -135,7 +135,7 @@ export function Board() {
     return (
       <div className="grid gap-4 md:grid-cols-3">
         {COLUMNS.map((column) => (
-          <div key={column} className="h-64 animate-pulse rounded-2xl bg-[var(--color-neutral-100)]" />
+          <div key={column} className="glass h-72 animate-pulse rounded-3xl" />
         ))}
       </div>
     );
@@ -148,7 +148,7 @@ export function Board() {
       {error && (
         <div
           role="alert"
-          className="mt-4 rounded-xl border border-[var(--color-danger)]/30 bg-[var(--color-danger)]/10 px-4 py-3 text-sm text-[var(--color-danger)]"
+          className="mt-4 rounded-2xl border border-[var(--color-danger)]/35 bg-[rgba(251,113,133,0.1)] px-4 py-3 text-sm text-[var(--color-danger)]"
         >
           {error}
         </div>
@@ -160,16 +160,21 @@ export function Board() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
           {COLUMNS.map((column) => (
             <BoardColumn key={column} column={column} tasks={byColumn[column]} onDelete={handleDelete} />
           ))}
         </div>
 
-        <DragOverlay>
+        <DragOverlay dropAnimation={{ duration: 240, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
           {activeTask ? (
-            <div className="task-dragging rounded-xl border border-[var(--color-accent)] bg-[var(--color-neutral-50)] p-3.5">
-              <p className="text-sm font-medium text-[var(--color-neutral-800)]">{activeTask.title}</p>
+            <div className="card-lift rotate-[2.5deg] scale-[1.04] cursor-grabbing rounded-2xl bg-[var(--color-neutral-50)] p-4">
+              <p className="text-[15px] font-medium text-[var(--color-neutral-800)]">{activeTask.title}</p>
+              {activeTask.description && (
+                <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--color-neutral-600)]">
+                  {activeTask.description}
+                </p>
+              )}
             </div>
           ) : null}
         </DragOverlay>

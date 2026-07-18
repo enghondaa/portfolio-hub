@@ -51,7 +51,7 @@ export default function RootLayout({
             caseStudySlug="taskboard"
           />
 
-          <header className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
+          <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-200)] bg-[rgba(6,8,12,0.72)] backdrop-blur-xl">
             <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5 sm:px-6">
               <Link
                 href="/"
@@ -78,7 +78,7 @@ export default function RootLayout({
 
           <main className="flex-1">{children}</main>
 
-          <footer className="border-t border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
+          <footer className="border-t border-[var(--color-neutral-200)]">
             <div className="mx-auto max-w-5xl px-5 py-8 font-mono text-xs text-[var(--color-neutral-600)] sm:px-6">
               Demo task board by Mohand Elshahawy — seeded content, public API.
             </div>

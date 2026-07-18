@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 // only, so it can never be this page's LCP element or block initial render.
 const AttendanceChart = dynamic(() => import("@/components/AttendanceChart").then((m) => m.AttendanceChart), {
   ssr: false,
-  loading: () => <div className="h-64 animate-pulse rounded-xl bg-[var(--color-neutral-100)]" />,
+  loading: () => <div className="h-64 animate-pulse rounded-2xl bg-[rgba(255,255,255,0.04)]" />,
 });
 
 export function AttendancePanelLoader() {

@@ -9,12 +9,12 @@ export const metadata: Metadata = {
 
 export default function HowThisWasBuiltPage() {
   return (
-    <div className="mx-auto max-w-2xl px-5 py-14 sm:px-0 sm:py-20">
+    <div className="mx-auto max-w-2xl px-5 py-14 sm:px-6 sm:py-24">
       <Link href="/" className="font-mono text-xs text-[var(--color-neutral-600)] hover:text-[var(--color-accent)]">
         ← All notes
       </Link>
 
-      <h1 className="mt-6 font-[family-name:var(--font-heading)] text-3xl font-semibold italic tracking-tight text-[var(--color-neutral-800)] sm:text-4xl">
+      <h1 className="mt-8 font-[family-name:var(--font-heading)] text-[clamp(34px,5.6vw,58px)] font-semibold italic leading-[1.02] tracking-[-0.03em] text-[var(--color-neutral-800)]">
         How this was built
       </h1>
 

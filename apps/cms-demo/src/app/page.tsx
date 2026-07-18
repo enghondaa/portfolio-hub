@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllArticles } from "@/lib/articles";
+import { ArticleRow } from "@/components/ArticleRow";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -10,45 +12,56 @@ export default function Home() {
   const articles = getAllArticles();
 
   return (
-    <div className="mx-auto max-w-2xl px-5 py-14 sm:px-0 sm:py-20">
-      <p className="font-mono text-xs text-[var(--color-accent)]">/ notes</p>
-      <h1 className="mt-3 font-[family-name:var(--font-heading)] text-4xl font-semibold italic tracking-tight text-[var(--color-neutral-800)] sm:text-5xl">
-        Field notes from building this site.
-      </h1>
-      <p className="mt-4 text-lg leading-relaxed text-[var(--color-neutral-600)]">
-        Real bugs, real fixes, written from this exact monorepo. Drop a new{" "}
-        <code className="rounded bg-[var(--color-accent-soft)] px-1.5 py-0.5 font-mono text-sm text-[var(--color-accent)]">
-          .mdx
-        </code>{" "}
-        file into <code className="rounded bg-[var(--color-accent-soft)] px-1.5 py-0.5 font-mono text-sm text-[var(--color-accent)]">content/articles</code> and it shows up here on the next
-        build — no code changes.{" "}
-        <Link href="/how-this-was-built" className="text-[var(--color-accent)] underline underline-offset-2">
-          How this works →
-        </Link>
-      </p>
+    <div className="mx-auto max-w-3xl px-5 py-14 sm:px-6 sm:py-24">
+      <Reveal>
+        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-[var(--color-accent)]">/ notes</p>
+      </Reveal>
 
-      <div className="mt-12 flex flex-col divide-y divide-[var(--color-neutral-200)]">
-        {articles.map((article) => (
-          <Link key={article.slug} href={`/articles/${article.slug}`} className="group py-7">
-            <div className="flex items-center gap-3 font-mono text-xs text-[var(--color-neutral-400)]">
-              <time dateTime={article.date}>
-                {new Date(article.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-              </time>
-              <span aria-hidden="true">·</span>
-              <span>{article.readingTime}</span>
-            </div>
-            <h2 className="mt-2 font-[family-name:var(--font-heading)] text-2xl font-semibold tracking-tight text-[var(--color-neutral-800)] transition-colors group-hover:text-[var(--color-accent)]">
-              {article.title}
-            </h2>
-            <p className="mt-2 leading-relaxed text-[var(--color-neutral-600)]">{article.excerpt}</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {article.tags.map((tag) => (
-                <span key={tag} className="rounded-full bg-[var(--color-neutral-100)] px-2.5 py-1 font-mono text-[11px] text-[var(--color-neutral-600)]">
-                  {tag}
-                </span>
-              ))}
-            </div>
+      <Reveal delay={0.06}>
+        <h1 className="mt-6 font-[family-name:var(--font-heading)] text-[clamp(44px,8vw,88px)] font-semibold italic leading-[0.94] tracking-[-0.035em] text-[var(--color-neutral-800)]">
+          Field notes
+          <span className="block not-italic text-[var(--color-neutral-400)]">from the build.</span>
+        </h1>
+      </Reveal>
+
+      <Reveal delay={0.12}>
+        <p className="mt-8 max-w-xl text-[17px] leading-relaxed text-[var(--color-neutral-600)]">
+          Real bugs and real fixes, written from this exact monorepo. Drop a new{" "}
+          <code className="rounded bg-[var(--color-accent-soft)] px-1.5 py-0.5 font-mono text-sm text-[var(--color-accent)]">
+            .mdx
+          </code>{" "}
+          file into{" "}
+          <code className="rounded bg-[var(--color-accent-soft)] px-1.5 py-0.5 font-mono text-sm text-[var(--color-accent)]">
+            content/articles
+          </code>{" "}
+          and it appears here on the next build, with no code changes.{" "}
+          <Link
+            href="/how-this-was-built"
+            className="text-[var(--color-accent)] underline decoration-[var(--color-accent)]/35 underline-offset-4 transition-colors hover:decoration-[var(--color-accent)]"
+          >
+            How that works →
           </Link>
+        </p>
+      </Reveal>
+
+      <Reveal delay={0.18}>
+        <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--color-neutral-400)]">
+          {articles.length} {articles.length === 1 ? "note" : "notes"}
+        </p>
+      </Reveal>
+
+      <div className="mt-4">
+        {articles.map((article, i) => (
+          <ArticleRow
+            key={article.slug}
+            index={i}
+            slug={article.slug}
+            title={article.title}
+            date={article.date}
+            excerpt={article.excerpt}
+            tags={article.tags}
+            readingTime={article.readingTime}
+          />
         ))}
       </div>
     </div>

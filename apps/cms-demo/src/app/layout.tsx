@@ -60,8 +60,8 @@ export default function RootLayout({
             caseStudySlug="cms-demo"
           />
 
-          <header className="border-b border-[var(--color-neutral-200)]">
-            <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-5 sm:px-0">
+          <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-200)] bg-[rgba(12,10,9,0.72)] backdrop-blur-xl">
+            <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-5 sm:px-6">
               <Link href="/" className="font-[family-name:var(--font-heading)] text-lg font-semibold tracking-tight text-[var(--color-neutral-800)]">
                 Notes<span className="text-[var(--color-accent)]">.</span>
               </Link>
@@ -84,7 +84,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
 
           <footer className="border-t border-[var(--color-neutral-200)]">
-            <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-3 px-5 py-8 font-mono text-xs text-[var(--color-neutral-600)] sm:px-0">
+            <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-5 py-10 font-mono text-[11px] text-[var(--color-neutral-600)] sm:px-6">
               <span>A CMS demo by Mohand Elshahawy</span>
               <a href="/rss.xml" className="transition-colors hover:text-[var(--color-accent)]">
                 RSS

@@ -42,23 +42,23 @@ export function AtRiskTable() {
         />
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-[var(--color-neutral-200)]">
+      <div className="mt-5 overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)]">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-100)]">
-              <th className="px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-600)]">Student</th>
-              <th className="px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-600)]">Attendance</th>
-              <th className="px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-600)]">Grade score</th>
-              <th className="px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-600)]">Wellbeing</th>
+            <tr className="border-b border-[var(--color-neutral-200)] bg-[rgba(255,255,255,0.04)]">
+              <th className="px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-neutral-400)]">Student</th>
+              <th className="px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-neutral-400)]">Attendance</th>
+              <th className="px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-neutral-400)]">Grade score</th>
+              <th className="px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-neutral-400)]">Wellbeing</th>
             </tr>
           </thead>
           <tbody>
             {visible.map((s) => (
-              <tr key={s.id} className="border-b border-[var(--color-neutral-200)] last:border-0">
-                <td className="px-4 py-2 font-mono text-xs text-[var(--color-neutral-800)]">{s.id}</td>
-                <td className="px-4 py-2 text-[#fb7185]">{s.attendance}%</td>
-                <td className="px-4 py-2 text-[#fb7185]">{s.gradeScore}</td>
-                <td className="px-4 py-2 text-[#fb7185]">{s.wellbeing}</td>
+              <tr key={s.id} className="border-b border-[var(--color-neutral-200)] transition-colors last:border-0 hover:bg-[rgba(255,255,255,0.025)]">
+                <td className="px-4 py-2.5 font-mono text-xs text-[var(--color-neutral-800)]">{s.id}</td>
+                <td className="px-4 py-2.5 text-[#fb7185]">{s.attendance}%</td>
+                <td className="px-4 py-2.5 text-[#fb7185]">{s.gradeScore}</td>
+                <td className="px-4 py-2.5 text-[#fb7185]">{s.wellbeing}</td>
               </tr>
             ))}
           </tbody>

@@ -40,7 +40,7 @@ export function NewTaskForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)] p-4"
+      className="glass rounded-3xl p-4"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <div className="flex-1">
@@ -52,7 +52,7 @@ export function NewTaskForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="What needs doing?"
-            className="w-full rounded-lg border border-[var(--color-neutral-200)] bg-[var(--color-neutral-0)] px-3 py-2 text-sm text-[var(--color-neutral-800)] outline-none placeholder:text-[var(--color-neutral-400)] focus:border-[var(--color-accent)]"
+            className="w-full rounded-xl border border-[var(--color-neutral-200)] bg-[rgba(255,255,255,0.03)] px-4 py-2.5 text-sm text-[var(--color-neutral-800)] outline-none transition-all duration-200 placeholder:text-[var(--color-neutral-400)] focus:border-[var(--color-accent)] focus:bg-[rgba(45,212,167,0.05)] focus:shadow-[0_0_0_3px_rgba(45,212,167,0.12)]"
           />
           <label htmlFor="task-description" className="sr-only">
             Task description
@@ -62,7 +62,7 @@ export function NewTaskForm({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional detail"
-            className="mt-2 w-full rounded-lg border border-[var(--color-neutral-200)] bg-[var(--color-neutral-0)] px-3 py-2 text-sm text-[var(--color-neutral-800)] outline-none placeholder:text-[var(--color-neutral-400)] focus:border-[var(--color-accent)]"
+            className="mt-2.5 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[rgba(255,255,255,0.03)] px-4 py-2.5 text-sm text-[var(--color-neutral-800)] outline-none transition-all duration-200 placeholder:text-[var(--color-neutral-400)] focus:border-[var(--color-accent)] focus:bg-[rgba(45,212,167,0.05)] focus:shadow-[0_0_0_3px_rgba(45,212,167,0.12)]"
           />
         </div>
 
@@ -74,7 +74,7 @@ export function NewTaskForm({
             id="task-priority"
             value={priority}
             onChange={(e) => setPriority(e.target.value as Priority)}
-            className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--color-neutral-0)] px-3 py-2 font-mono text-xs text-[var(--color-neutral-700)] outline-none focus:border-[var(--color-accent)]"
+            className="rounded-xl border border-[var(--color-neutral-200)] bg-[rgba(255,255,255,0.03)] px-3 py-2.5 font-mono text-xs uppercase tracking-wider text-[var(--color-neutral-700)] outline-none transition-colors focus:border-[var(--color-accent)]"
           >
             {PRIORITIES.map((p) => (
               <option key={p} value={p}>
@@ -86,7 +86,7 @@ export function NewTaskForm({
           <button
             type="submit"
             disabled={submitting || title.trim().length === 0}
-            className="rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--color-accent-light)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-xl bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[#04120e] shadow-[0_0_22px_-6px_rgba(45,212,167,0.75)] transition-all duration-200 hover:bg-[var(--color-accent-light)] hover:shadow-[0_0_30px_-4px_rgba(45,212,167,0.9)] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-30 disabled:shadow-none"
           >
             {submitting ? "Adding…" : "Add task"}
           </button>

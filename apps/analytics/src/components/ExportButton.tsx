@@ -16,7 +16,7 @@ export function ExportButton({
     <button
       type="button"
       onClick={() => downloadCSV(filename, headers, rows)}
-      className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-neutral-200)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-600)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+      className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-neutral-200)] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--color-neutral-600)] transition-all duration-200 hover:border-[var(--color-accent)] hover:bg-[rgba(139,124,246,0.1)] hover:text-[var(--color-accent)]"
     >
       Export CSV
     </button>

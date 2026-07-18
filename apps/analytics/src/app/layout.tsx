@@ -51,7 +51,7 @@ export default function RootLayout({
             caseStudySlug="analytics"
           />
 
-          <header className="border-b border-[var(--color-neutral-200)]">
+          <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-200)] bg-[rgba(11,13,18,0.72)] backdrop-blur-xl">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-6">
               <span className="font-[family-name:var(--font-heading)] text-lg font-bold tracking-tight text-[var(--color-neutral-800)]">
                 School Analytics<span className="text-[var(--color-accent)]">.</span>

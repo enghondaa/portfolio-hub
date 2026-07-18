@@ -54,9 +54,9 @@ export function InsightCallout() {
   }, [kpi]);
 
   return (
-    <div className="rounded-2xl border border-[var(--color-accent)]/25 bg-[var(--color-accent-soft)] px-5 py-4">
-      <p className="font-mono text-[11px] uppercase tracking-wider text-[var(--color-accent)]">Auto-generated insight</p>
-      <p className="mt-1.5 text-sm text-[var(--color-neutral-700)]">{sentence}</p>
+    <div className="glass rounded-3xl border-[rgba(139,124,246,0.3)] px-6 py-5">
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Auto-generated insight</p>
+      <p className="mt-2.5 text-[15px] leading-relaxed text-[var(--color-neutral-700)]">{sentence}</p>
     </div>
   );
 }

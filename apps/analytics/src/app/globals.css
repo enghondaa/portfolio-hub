@@ -25,6 +25,70 @@
   --color-cyan: #22d3ee;         /* secondary series */
   --color-success: #34d399;
   --color-warning: #fbbf24;
+  --color-danger: #fb7185;
+}
+
+/*
+ * Ambient depth: two slow colour washes fixed behind the whole dashboard so
+ * panels read as glass floating over a lit surface rather than flat cards.
+ */
+body {
+  background-image:
+    radial-gradient(1000px circle at 8% -12%, rgba(139, 124, 246, 0.2), transparent 55%),
+    radial-gradient(800px circle at 92% 4%, rgba(34, 211, 238, 0.13), transparent 50%);
+  background-attachment: fixed;
+}
+
+.glass {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.014));
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--color-neutral-200);
+}
+
+/* Panels lift slightly toward the cursor. */
+.panel-hover {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.panel-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139, 124, 246, 0.35);
+  box-shadow: 0 24px 55px -26px rgba(0, 0, 0, 0.9), 0 0 34px -16px rgba(139, 124, 246, 0.55);
+}
+
+@keyframes sheen {
+  from { background-position: -220% 0; }
+  to { background-position: 220% 0; }
+}
+.sheen {
+  background: linear-gradient(
+    100deg,
+    var(--color-neutral-800) 32%,
+    var(--color-accent-light) 50%,
+    var(--color-neutral-800) 68%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .panel-hover:hover { transform: none; }
+  .sheen {
+    animation: none;
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--color-neutral-800);
+  }
 }
 
 /* Long-form prose styles, shared shape with the CMS demo so the

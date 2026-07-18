@@ -2,32 +2,59 @@
 @import "@portfolio/config/tailwind/theme.css";
 
 /*
- * CMS Demo gets its own identity, deliberately distinct from the hub's warm
- * amber/cream look: a crisp white "paper" background, near-black ink, and a
- * cool indigo accent — an editorial technical-journal feel. Reuses the same
- * @portfolio/ui components as every other app; they just read these same
- * CSS variables, so overriding the values here is enough to re-skin them.
+ * CMS Demo identity: a dark literary journal. Warm near-black paper, ivory
+ * ink, and an amber-gold accent, set in a large display serif. Deliberately
+ * unlike the Task Board's emerald product surface and the Analytics
+ * dashboard's violet glass — this one should read as something you sit down
+ * and read, not an app you operate.
  */
 @theme {
-  --color-neutral-0: #ffffff;
-  --color-neutral-50: #f7f8fa;
-  --color-neutral-100: #eef0f4;
-  --color-neutral-200: rgba(15, 23, 42, 0.1);
-  --color-neutral-400: #94a3b8;
-  --color-neutral-600: #475569;
-  --color-neutral-700: #334155;
-  --color-neutral-800: #16181d;
-  --color-neutral-950: #0d1117;
+  --color-neutral-0: #0c0a09;    /* page */
+  --color-neutral-50: #14110f;   /* raised surface */
+  --color-neutral-100: #1c1815;  /* chip / well */
+  --color-neutral-200: rgba(231, 214, 186, 0.14); /* hairlines */
+  --color-neutral-400: #7d7167;  /* faint */
+  --color-neutral-600: #a89b8c;  /* secondary */
+  --color-neutral-700: #d2c6b6;  /* body copy */
+  --color-neutral-800: #f5efe6;  /* ink */
+  --color-neutral-950: #060505;
 
-  --color-accent: #3457d5;
-  --color-accent-light: #5c7cfa;
-  --color-accent-soft: #eef1fb;
-  --color-success: #0f766e;
+  --color-accent: #d9a441;       /* gold */
+  --color-accent-light: #f0c473;
+  --color-accent-soft: rgba(217, 164, 65, 0.13);
+  --color-success: #6ba368;
+}
+
+body {
+  background-image: radial-gradient(1100px circle at 50% -18%, rgba(217, 164, 65, 0.11), transparent 58%);
+  background-attachment: fixed;
+}
+
+/* Rule that draws itself in as an article row scrolls into view. */
+@keyframes draw-rule {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Reading progress bar for article pages. */
+.read-progress {
+  transform-origin: 0 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .prose-article pre {
   background: var(--color-neutral-950);
   color: #e6e6e6;
+  border: 1px solid var(--color-neutral-200);
   border-radius: 14px;
   padding: 1.1rem 1.25rem;
   overflow-x: auto;
