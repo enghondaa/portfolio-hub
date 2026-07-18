@@ -1,2 +1,12 @@
-/* Re-exports the shared design tokens so apps can import a single stylesheet. */
+/*
+ * Stylesheet for Storybook and for any consumer that wants the component
+ * styles without wiring up Tailwind themselves.
+ *
+ * The `@import "tailwindcss"` is load-bearing: the tokens alone only define
+ * CSS variables, so without it none of the utility classes the components
+ * actually use get generated and everything renders unstyled. The apps each
+ * do the same import in their own globals.css; this file is the equivalent
+ * entry point for the package.
+ */
+@import "tailwindcss";
 @import "../../config/tailwind/theme.css";
