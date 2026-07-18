@@ -3,6 +3,19 @@
 import { useState } from "react";
 import { ApiError } from "@/lib/api";
 import { PRIORITIES, type Priority } from "@/lib/types";
+import { Dropdown } from "@/components/Dropdown";
+
+const PRIORITY_DOTS: Record<Priority, string> = {
+  high: "var(--color-danger)",
+  medium: "var(--color-warning)",
+  low: "var(--color-neutral-400)",
+};
+
+const PRIORITY_OPTIONS = PRIORITIES.map((p) => ({
+  value: p,
+  label: p,
+  dot: PRIORITY_DOTS[p],
+}));
 
 export function NewTaskForm({
   onCreate,
@@ -67,21 +80,14 @@ export function NewTaskForm({
         </div>
 
         <div className="flex items-center gap-2">
-          <label htmlFor="task-priority" className="sr-only">
-            Priority
-          </label>
-          <select
-            id="task-priority"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value as Priority)}
-            className="rounded-xl border border-[var(--color-neutral-200)] bg-[rgba(255,255,255,0.03)] px-3 py-2.5 font-mono text-xs uppercase tracking-wider text-[var(--color-neutral-700)] outline-none transition-colors focus:border-[var(--color-accent)]"
-          >
-            {PRIORITIES.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
+          <div className="w-36 shrink-0">
+            <Dropdown
+              label="Priority"
+              value={priority}
+              options={PRIORITY_OPTIONS}
+              onChange={(next) => setPriority(next as Priority)}
+            />
+          </div>
 
           <button
             type="submit"
