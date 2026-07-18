@@ -17,3 +17,13 @@ export * from "./components/Badge";
 export * from "./components/Navbar";
 export * from "./components/Footer";
 export * from "./components/ThemeToggle";
+
+// Behaviour primitives, ported from the forge-ui-primitives project. These
+// are the parts a styled component library still needs but rarely factors
+// out: focus containment, controlled/uncontrolled state, ref merging, and
+// keyboard navigation constants.
+export * from "./lib/keyboard";
+export * from "./lib/merge-refs";
+export * from "./lib/focus-trap";
+export * from "./lib/use-controllable-state";
+export * from "./lib/use-outside-click";

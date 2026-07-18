@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Keys, useOutsideClick } from "@portfolio/ui";
 
 export interface DropdownOption {
   value: string;
@@ -19,6 +20,9 @@ export interface DropdownOption {
  *
  * Keyboard: Up/Down to move, Home/End to jump, Enter or Space to choose,
  * Escape to dismiss, Tab to leave. Closing always returns focus to the trigger.
+ *
+ * Outside-click handling and the key constants come from @portfolio/ui's
+ * behaviour primitives rather than being restated here.
  */
 export function Dropdown({
   label,
@@ -52,15 +56,10 @@ export function Dropdown({
     setIsOpen(true);
   }, [selectedIndex]);
 
-  // Dismiss on any click that lands outside the trigger and panel.
-  useEffect(() => {
-    if (!isOpen) return;
-    function onPointerDown(event: MouseEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) setIsOpen(false);
-    }
-    document.addEventListener("mousedown", onPointerDown);
-    return () => document.removeEventListener("mousedown", onPointerDown);
-  }, [isOpen]);
+  // Dismiss on any pointer event outside the trigger and panel. The shared
+  // hook also covers touchstart, which the hand-rolled version here missed.
+  const dismiss = useCallback(() => setIsOpen(false), []);
+  useOutsideClick(containerRef, dismiss, isOpen);
 
   // Move DOM focus onto the list so screen readers announce the active option.
   useEffect(() => {
@@ -75,39 +74,39 @@ export function Dropdown({
 
   function onListKeyDown(event: React.KeyboardEvent) {
     switch (event.key) {
-      case "ArrowDown":
+      case Keys.ArrowDown:
         event.preventDefault();
         setActiveIndex((i) => Math.min(i + 1, options.length - 1));
         break;
-      case "ArrowUp":
+      case Keys.ArrowUp:
         event.preventDefault();
         setActiveIndex((i) => Math.max(i - 1, 0));
         break;
-      case "Home":
+      case Keys.Home:
         event.preventDefault();
         setActiveIndex(0);
         break;
-      case "End":
+      case Keys.End:
         event.preventDefault();
         setActiveIndex(options.length - 1);
         break;
-      case "Enter":
-      case " ":
+      case Keys.Enter:
+      case Keys.Space:
         event.preventDefault();
         commit(activeIndex);
         break;
-      case "Escape":
+      case Keys.Escape:
         event.preventDefault();
         close(true);
         break;
-      case "Tab":
+      case Keys.Tab:
         close(false);
         break;
     }
   }
 
   function onTriggerKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+    if (event.key === Keys.ArrowDown || event.key === Keys.Enter || event.key === Keys.Space) {
       event.preventDefault();
       open();
     }
