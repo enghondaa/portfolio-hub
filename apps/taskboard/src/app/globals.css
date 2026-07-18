@@ -1,2 +1,110 @@
 @import "tailwindcss";
 @import "@portfolio/config/tailwind/theme.css";
+
+/*
+ * Task Board gets a fourth distinct identity, deliberately unlike the hub's
+ * warm amber/cream, the CMS Demo's white editorial theme, and the Analytics
+ * dashboard's near-black. This one is a cool slate-gray product-tool look
+ * with a single emerald accent — the register of an internal tool rather
+ * than a marketing page. Same @portfolio/ui components, re-themed purely
+ * through these CSS variables.
+ */
+@theme {
+  --color-neutral-0: #eef1f5;    /* page background */
+  --color-neutral-50: #ffffff;   /* card background */
+  --color-neutral-100: #e3e8ef;  /* column / chip background */
+  --color-neutral-200: rgba(15, 23, 42, 0.1); /* hairline borders */
+  --color-neutral-400: #94a3b8;  /* faint/placeholder text */
+  --color-neutral-600: #64748b;  /* secondary text */
+  --color-neutral-700: #475569;  /* body copy */
+  --color-neutral-800: #0f172a;  /* primary ink */
+  --color-neutral-950: #ffffff;
+
+  --color-accent: #0d9488;       /* teal — primary action */
+  --color-accent-light: #14b8a6;
+  --color-accent-soft: #d5f0ec;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #e11d48;
+}
+
+/* Lifted card while a task is being dragged. */
+.task-dragging {
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Long-form prose styles, shared shape with the CMS demo so the
+   how-it-was-built pages read consistently across every demo. */
+.prose-article pre {
+  background: var(--color-neutral-950);
+  color: #e6e6e6;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.prose-article code {
+  font-family: var(--font-mono);
+}
+.prose-article :not(pre) > code {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  font-size: 0.85em;
+}
+.prose-article h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
+  color: var(--color-neutral-800);
+}
+.prose-article h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-top: 1.8em;
+  margin-bottom: 0.5em;
+  color: var(--color-neutral-800);
+}
+.prose-article p {
+  margin: 1em 0;
+  line-height: 1.75;
+  color: var(--color-neutral-700);
+}
+.prose-article ul,
+.prose-article ol {
+  margin: 1em 0;
+  padding-left: 1.4em;
+  color: var(--color-neutral-700);
+}
+.prose-article li {
+  margin: 0.4em 0;
+  line-height: 1.7;
+}
+.prose-article a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-article blockquote {
+  border-left: 3px solid var(--color-accent);
+  margin: 1.4em 0;
+  padding: 0.2em 1.2em;
+  color: var(--color-neutral-600);
+  font-style: italic;
+}

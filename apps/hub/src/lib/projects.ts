@@ -26,13 +26,15 @@ export const projects: Project[] = [
   {
     slug: "taskboard",
     title: "Task Board",
-    tagline: "Kanban board with auth and a real REST API",
+    tagline: "Drag-and-drop kanban over a real REST API",
     problem:
-      "A Kanban-style task board: React frontend, an Express REST API with JWT auth and refresh tokens, drag-and-drop cards with optimistic updates, and a guest login that spins up a seeded demo account in one click.",
-    stack: ["React", "TypeScript", "Next.js", "Zustand", "Node.js", "Express.js"],
-    status: "in-progress",
+      "A Kanban board backed by a genuine REST API rather than browser state: five Next.js Route Handlers with Zod validation at every write boundary, drag-and-drop with optimistic updates that roll back when a request fails, and a storage adapter that runs the same handlers against Postgres or an in-memory store.",
+    stack: ["Next.js", "TypeScript", "Route Handlers", "Zod", "dnd-kit", "Postgres"],
+    status: "live",
+    liveUrl: "https://mohand-taskboard-demo.vercel.app",
     repoPath: "apps/taskboard",
-    tag: "In progress",
+    outcome: "422s with field-level errors, not a generic 400",
+    tag: "Real REST API",
   },
   {
     slug: "analytics",
@@ -57,6 +59,7 @@ export const projects: Project[] = [
       "A shared React component library: Button, Card, Input, Select, Modal, Tabs, Table, Badge, Navbar, Footer, and ThemeToggle. Every component has a keyboard-accessible implementation, a Jest + React Testing Library test, and a Storybook story in both light and dark themes. Every app in this monorepo is built on top of it.",
     stack: ["React", "TypeScript", "Tailwind CSS", "Jest", "React Testing Library", "Storybook"],
     status: "live",
+    liveUrl: "https://mohand-storybook.vercel.app",
     repoPath: "packages/ui",
     tag: "11 components",
   },

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Newsreader, Inter, IBM_Plex_Mono } from "next/font/google";
+import { DemoStrip } from "@/components/DemoStrip";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -53,6 +54,12 @@ export default function RootLayout({
         className={`${newsreader.variable} ${inter.variable} ${ibmPlexMono.variable} bg-[var(--color-neutral-0)] font-sans text-[var(--color-neutral-800)] antialiased`}
       >
         <div className="flex min-h-screen flex-col">
+          <DemoStrip
+            stack={["Next.js 16", "MDX", "Shiki", "gray-matter", "RSS"]}
+            sourcePath="apps/cms-demo"
+            caseStudySlug="cms-demo"
+          />
+
           <header className="border-b border-[var(--color-neutral-200)]">
             <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-5 sm:px-0">
               <Link href="/" className="font-[family-name:var(--font-heading)] text-lg font-semibold tracking-tight text-[var(--color-neutral-800)]">

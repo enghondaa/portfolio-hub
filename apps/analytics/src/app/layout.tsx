@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Manrope, Work_Sans, JetBrains_Mono } from "next/font/google";
+import { DemoStrip } from "@/components/DemoStrip";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -43,17 +45,31 @@ export default function RootLayout({
         className={`${manrope.variable} ${workSans.variable} ${jetbrainsMono.variable} bg-[var(--color-neutral-0)] font-sans text-[var(--color-neutral-800)] antialiased`}
       >
         <div className="flex min-h-screen flex-col">
+          <DemoStrip
+            stack={["Next.js 16", "D3.js", "Chart.js", "Zustand", "TypeScript"]}
+            sourcePath="apps/analytics"
+            caseStudySlug="analytics"
+          />
+
           <header className="border-b border-[var(--color-neutral-200)]">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-6">
               <span className="font-[family-name:var(--font-heading)] text-lg font-bold tracking-tight text-[var(--color-neutral-800)]">
                 School Analytics<span className="text-[var(--color-accent)]">.</span>
               </span>
-              <a
-                href="https://mohand-hub.vercel.app"
-                className="rounded-full border border-[var(--color-neutral-200)] px-3 py-1.5 font-mono text-xs text-[var(--color-neutral-600)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-              >
-                ← Portfolio
-              </a>
+              <nav className="flex items-center gap-2">
+                <Link
+                  href="/how-this-was-built"
+                  className="rounded-full px-3 py-1.5 font-mono text-xs text-[var(--color-neutral-600)] transition-colors hover:text-[var(--color-accent)]"
+                >
+                  How it&apos;s built
+                </Link>
+                <a
+                  href="https://mohand-hub.vercel.app"
+                  className="rounded-full border border-[var(--color-neutral-200)] px-3 py-1.5 font-mono text-xs text-[var(--color-neutral-600)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                >
+                  ← Portfolio
+                </a>
+              </nav>
             </div>
           </header>
 
