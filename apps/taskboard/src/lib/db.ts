@@ -1,5 +1,6 @@
 import type { ColumnId, CreateTaskInput, Task, UpdateTaskInput } from "@/lib/types";
 import { memoryStore } from "@/lib/store";
+import { SEED_TASKS } from "@/lib/seed-data";
 
 /**
  * Storage adapter.
@@ -64,6 +65,22 @@ async function ensureSchema(): Promise<void> {
         );
       `;
       await sql`CREATE INDEX IF NOT EXISTS tasks_column_position_idx ON tasks (column_id, position);`;
+
+      // Seed the starter board exactly once, the first time the table is
+      // empty. Without this a freshly provisioned database opens on three
+      // empty columns, which reads as broken. A concurrent cold start could
+      // in principle seed twice; the COUNT check makes that harmless-ish for
+      // a demo, and the nightly reset squares it away. Documented rather than
+      // over-engineered with an advisory lock.
+      const { rows } = await sql<{ count: string }>`SELECT COUNT(*)::text AS count FROM tasks;`;
+      if (Number(rows[0]?.count ?? 0) === 0) {
+        for (const task of SEED_TASKS) {
+          await sql`
+            INSERT INTO tasks (title, description, column_id, priority, position)
+            VALUES (${task.title}, ${task.description}, ${task.column}, ${task.priority}, ${task.position});
+          `;
+        }
+      }
     })();
   }
   return schemaReady;

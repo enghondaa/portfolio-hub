@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { ColumnId, CreateTaskInput, Priority, Task, UpdateTaskInput } from "@/lib/types";
+import { SEED_TASKS } from "@/lib/seed-data";
 
 /**
  * In-memory store used when no POSTGRES_URL is configured.
@@ -11,57 +12,6 @@ import type { ColumnId, CreateTaskInput, Priority, Task, UpdateTaskInput } from 
  * interface is the real persistence path — see lib/db.ts.
  */
 
-const SEED: Omit<Task, "id" | "createdAt" | "updatedAt">[] = [
-  {
-    title: "Audit reduced-motion coverage",
-    description: "Every animated component should respect prefers-reduced-motion, not just the hero.",
-    column: "done",
-    priority: "medium",
-    position: 0,
-  },
-  {
-    title: "Split D3 and Chart.js into async chunks",
-    description: "Neither library should be in the initial bundle. Verify by grepping the built chunks.",
-    column: "done",
-    priority: "high",
-    position: 1,
-  },
-  {
-    title: "Add optimistic updates with rollback",
-    description: "Drag should feel instant. If the PATCH fails, snap the card back and surface the error.",
-    column: "in_progress",
-    priority: "high",
-    position: 0,
-  },
-  {
-    title: "Write Zod schemas for every route handler",
-    description: "Validate at the boundary and return 422 with field-level messages, not a generic 400.",
-    column: "in_progress",
-    priority: "medium",
-    position: 1,
-  },
-  {
-    title: "Swap in-memory store for Postgres",
-    description: "The adapter interface is already there. Set POSTGRES_URL and the same API is backed by SQL.",
-    column: "todo",
-    priority: "high",
-    position: 0,
-  },
-  {
-    title: "Add keyboard-accessible drag and drop",
-    description: "dnd-kit ships a keyboard sensor. Cards should be movable without a mouse.",
-    column: "todo",
-    priority: "medium",
-    position: 1,
-  },
-  {
-    title: "Rate-limit the write endpoints",
-    description: "This is a public demo. POST and PATCH should be throttled per IP.",
-    column: "todo",
-    priority: "low",
-    position: 2,
-  },
-];
 
 function nowISO(): string {
   return new Date().toISOString();
@@ -72,7 +22,7 @@ let tasks: Task[] | null = null;
 function ensureSeeded(): Task[] {
   if (tasks === null) {
     const timestamp = nowISO();
-    tasks = SEED.map((task) => ({
+    tasks = SEED_TASKS.map((task) => ({
       ...task,
       id: randomUUID(),
       createdAt: timestamp,

@@ -2,6 +2,11 @@ import { Board } from "@/components/Board";
 import { PersistenceBanner } from "@/components/PersistenceBanner";
 import { Reveal } from "@/components/Reveal";
 
+// The persistence banner reflects whether POSTGRES_URL is set, which can
+// change without a code change, so this page must be evaluated per request
+// rather than frozen at build time.
+export const dynamic = "force-dynamic";
+
 const FACTS = [
   { value: "5", label: "REST endpoints" },
   { value: "422", label: "with field errors" },
