@@ -1,12 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DEMO_ORDERS } from "@/lib/demo-orders";
+import type { DemoOrder } from "@/lib/demo-orders";
 import { TrackTimeline, type TrackResult } from "@/components/TrackTimeline";
 
 type Phase = "idle" | "loading" | "found" | "notfound" | "error";
 
-export function TrackClient({ initialOrder, initialEmail }: { initialOrder?: string; initialEmail?: string }) {
+export function TrackClient({
+  initialOrder,
+  initialEmail,
+  demoOrders,
+}: {
+  initialOrder?: string;
+  initialEmail?: string;
+  demoOrders: DemoOrder[];
+}) {
   const [orderNumber, setOrderNumber] = useState(initialOrder ?? "");
   const [email, setEmail] = useState(initialEmail ?? "");
   const [phase, setPhase] = useState<Phase>("idle");
@@ -122,13 +130,14 @@ export function TrackClient({ initialOrder, initialEmail }: { initialOrder?: str
         </button>
       </form>
 
-      {/* Demo shortcuts */}
-      <div className="mt-5 rounded-2xl border border-dashed border-[var(--color-neutral-200)] p-4">
+      {/* Demo shortcuts. Hidden rather than shown empty if the store has no
+          example in any of the showcase states. */}
+      <div className={demoOrders.length === 0 ? "hidden" : "mt-5 rounded-2xl border border-dashed border-[var(--color-neutral-200)] p-4"}>
         <p className="font-mono text-[11px] uppercase tracking-wider text-[var(--color-neutral-400)]">
           Try it instantly — three seeded orders in different states
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {DEMO_ORDERS.map((demo) => (
+          {demoOrders.map((demo) => (
             <button
               key={demo.orderNumber}
               type="button"

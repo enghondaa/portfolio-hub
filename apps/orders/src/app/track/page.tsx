@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { TrackClient } from "@/components/TrackClient";
+import { getDemoOrders } from "@/lib/demo-orders";
+
+// The demo shortcuts are read out of the store, so this page has to be
+// rendered per request rather than frozen at build time.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Track your order — Kahwa Supply",
@@ -13,6 +18,7 @@ export default async function TrackPage({
   searchParams: Promise<{ order?: string; email?: string }>;
 }) {
   const { order, email } = await searchParams;
+  const demoOrders = await getDemoOrders();
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-10 sm:px-6 sm:py-14">
@@ -24,7 +30,7 @@ export default async function TrackPage({
         Enter your order number and the email you used. Both have to match — that&apos;s deliberate, so no one can look up an order that isn&apos;t theirs.
       </p>
 
-      <TrackClient initialOrder={order} initialEmail={email} />
+      <TrackClient initialOrder={order} initialEmail={email} demoOrders={demoOrders} />
     </div>
   );
 }

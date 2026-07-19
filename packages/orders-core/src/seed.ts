@@ -2,6 +2,15 @@ import { computeTotals } from "./pricing";
 import type { Customer, Order, OrderEvent, OrderItem, OrderStatus, Product } from "./types";
 
 /**
+ * The clock the seed pretends it is running at. It is a fixed date rather than
+ * Date.now() so the same seed version always produces the same history, which
+ * is what makes the demo order numbers in the tracking page shortcuts stable
+ * and the test suite meaningful. The cost is that the seeded history ages: it
+ * is written to the database once, on first boot, and never regenerated.
+ */
+export const SEED_NOW_MS = Date.UTC(2026, 6, 18);
+
+/**
  * Deterministic seed data for Kahwa Supply, a fictional specialty coffee
  * roaster. Same generator as the analytics dashboard: a mulberry32 PRNG
  * seeded from a string hash, so server and client render identical data and
@@ -100,7 +109,7 @@ const LAST_NAMES = ["Hassan", "Ibrahim", "Fouad", "Mansour", "Saleh", "Nagy", "R
 
 export function seedCustomers(seedVersion: string, count = 40): Customer[] {
   const random = mulberry32(hashString(`customers:${seedVersion}`));
-  const now = Date.UTC(2026, 6, 18);
+  const now = SEED_NOW_MS;
   const customers: Customer[] = [];
   const usedEmails = new Set<string>();
 
@@ -180,7 +189,7 @@ export interface SeededData {
 
 export function seedOrders(seedVersion: string, products: Product[], customers: Customer[], count = 180): Order[] {
   const random = mulberry32(hashString(`orders:${seedVersion}`));
-  const now = Date.UTC(2026, 6, 18);
+  const now = SEED_NOW_MS;
   const orders: Order[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -190,8 +199,8 @@ export function seedOrders(seedVersion: string, products: Product[], customers: 
     // Spread across 90 days. Mid-flight orders are pulled recent, because a
     // three-month-old order still "out for delivery" would be nonsense.
     const inFlight = !["delivered", "cancelled"].includes(finalStatus);
-    const daysAgo = inFlight ? Math.floor(random() * 6) : 2 + Math.floor(random() * 88);
-    const placedAtMs = now - daysAgo * 86_400_000 - Math.floor(random() * 86_400_000);
+    const daysAgo = inFlight ? 1 + Math.floor(random() * 6) : 2 + Math.floor(random() * 88);
+    const requestedPlacedAtMs = now - daysAgo * 86_400_000 - Math.floor(random() * 86_400_000);
 
     const lineCount = 1 + Math.floor(random() * 3);
     const items: OrderItem[] = [];
@@ -216,15 +225,32 @@ export function seedOrders(seedVersion: string, products: Product[], customers: 
     const orderNumber = `KH-2026-${String(i + 1).padStart(4, "0")}`;
 
     const path = pathTo(finalStatus);
-    // Accumulate the gap between steps rather than multiplying a fresh random
-    // by the step index: with a per-step multiplier, a later step that drew a
-    // small number could land before an earlier step that drew a large one,
-    // producing a timeline that runs backwards.
+
+    // Draw every gap up front so the timeline's full span is known before the
+    // start time is fixed. Two things depend on that.
+    //
+    // First, the gaps are accumulated rather than multiplied by the step index.
+    // With a per-step multiplier a later step that drew a small number could
+    // land before an earlier step that drew a large one, and the timeline would
+    // run backwards.
+    //
+    // Second, a timeline built forwards from placedAt can overshoot the present.
+    // A recent order still in flight has several steps left, each up to 30
+    // hours, so its later events were being stamped days into the future. They
+    // then sorted ahead of anything an admin did today, which is how "Shipped"
+    // ended up below "Out for delivery" on a live order. Knowing the span lets
+    // the start be pulled back far enough that the last seeded event always
+    // lands at or before `now`.
+    // Each step lands 6-30 hours after the previous one.
+    const gapsMs = path.slice(1).map(() => (6 + random() * 24) * 3_600_000);
+    const spanMs = gapsMs.reduce((total, gap) => total + gap, 0);
+    const latestStartMs = now - spanMs;
+    const placedAtMs = Math.min(requestedPlacedAtMs, latestStartMs);
+
     let eventAtMs = placedAtMs;
     const timeline: OrderEvent[] = path.map((status, stepIndex) => {
       if (stepIndex > 0) {
-        // Each step lands 6-30 hours after the previous one.
-        eventAtMs += (6 + random() * 24) * 3_600_000;
+        eventAtMs += gapsMs[stepIndex - 1] ?? 0;
       }
       return {
         id: `${orderId}_evt_${stepIndex + 1}`,

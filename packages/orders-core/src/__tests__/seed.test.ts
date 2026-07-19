@@ -1,5 +1,5 @@
 import { computeTotals } from "../pricing";
-import { hashString, mulberry32, seedAll, seedCustomers, seedOrders, seedProducts } from "../seed";
+import { SEED_NOW_MS, hashString, mulberry32, seedAll, seedCustomers, seedOrders, seedProducts } from "../seed";
 import { canTransition } from "../transitions";
 import type { OrderStatus } from "../types";
 
@@ -175,8 +175,34 @@ describe("seeded orders", () => {
     expect(inFlight.length).toBeGreaterThan(5);
   });
 
+  it("never stamps an event in the future", () => {
+    // Timelines used to be built forwards from placedAt, so a recent in-flight
+    // order with several steps left could have its later events dated days
+    // ahead of the seed clock. Those events then sorted above anything an
+    // admin did today, which is how a live order showed "Shipped" underneath
+    // "Out for delivery".
+    for (const order of orders) {
+      for (const event of order.timeline) {
+        expect(new Date(event.at).getTime()).toBeLessThanOrEqual(SEED_NOW_MS);
+      }
+    }
+  });
+
+  it("keeps every timeline in chronological order", () => {
+    for (const order of orders) {
+      const times = order.timeline.map((event) => new Date(event.at).getTime());
+      expect(times).toEqual([...times].sort((a, b) => a - b));
+    }
+  });
+
+  it("starts every timeline exactly at placedAt", () => {
+    for (const order of orders) {
+      expect(order.timeline[0]?.at).toBe(order.placedAt);
+    }
+  });
+
   it("keeps mid-flight orders recent, since a 3-month-old order still shipping would be nonsense", () => {
-    const now = Date.UTC(2026, 6, 18);
+    const now = SEED_NOW_MS;
     for (const order of orders) {
       if (["delivered", "cancelled"].includes(order.status)) continue;
       const ageDays = (now - new Date(order.placedAt).getTime()) / 86_400_000;

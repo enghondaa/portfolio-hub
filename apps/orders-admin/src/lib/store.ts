@@ -18,7 +18,7 @@ import {
  * credential auth is done.
  */
 
-const SEED_VERSION = process.env.SEED_VERSION ?? "kahwa-v1";
+const SEED_VERSION = process.env.SEED_VERSION ?? "kahwa-v2";
 
 /** The demo password, shown on the login page. Both seeded accounts use it. */
 export const DEMO_PASSWORD = "kahwa-demo";

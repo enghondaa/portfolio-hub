@@ -142,12 +142,30 @@ export function createPostgresStore(options: PostgresStoreOptions): OrdersStore 
         role TEXT NOT NULL
       );`;
 
-      // Seed once, the first time the products table is empty. See the
-      // taskboard adapter for the same pattern and the same honest caveat
-      // about a concurrent double-seed being squared away by the nightly
-      // reset rather than an advisory lock.
-      const { rows } = await sql<{ count: string }>`SELECT COUNT(*)::text AS count FROM products;`;
-      if (Number(rows[0]?.count ?? 0) === 0) {
+      // Records which seed version currently occupies the tables. Without it
+      // the only seeding trigger is "products is empty", which means a fix to
+      // the generator can never reach a database that has already been
+      // populated: the corrected code deploys, the wrong rows stay. Storing the
+      // version turns a seed change into something that actually propagates.
+      await sql`CREATE TABLE IF NOT EXISTS seed_meta (
+        id INTEGER PRIMARY KEY DEFAULT 1,
+        seed_version TEXT NOT NULL,
+        seeded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        CONSTRAINT seed_meta_single_row CHECK (id = 1)
+      );`;
+
+      // Seed when the tables are empty, or reseed when the version on disk is
+      // stale. The same honest caveat as the taskboard adapter applies: two
+      // cold starts racing here could seed twice, and the ON CONFLICT DO
+      // NOTHING inserts absorb that rather than an advisory lock.
+      const { rows: countRows } = await sql<{ count: string }>`SELECT COUNT(*)::text AS count FROM products;`;
+      const { rows: metaRows } = await sql<{ seed_version: string }>`SELECT seed_version FROM seed_meta WHERE id = 1;`;
+      const isEmpty = Number(countRows[0]?.count ?? 0) === 0;
+      const isStale = metaRows[0]?.seed_version !== options.seedVersion;
+      if (isEmpty) {
+        await seed();
+      } else if (isStale) {
+        await sql`TRUNCATE order_events, order_items, orders, customers, products RESTART IDENTITY CASCADE;`;
         await seed();
       }
     })();
@@ -187,6 +205,12 @@ export function createPostgresStore(options: PostgresStoreOptions): OrdersStore 
         VALUES (${admin.id}, ${admin.name}, ${admin.email}, ${admin.passwordHash}, ${admin.role})
         ON CONFLICT (id) DO NOTHING;`;
     }
+
+    // Stamped last, so a seed that dies halfway leaves the version stale and
+    // the next boot tries again rather than assuming the data is good.
+    await sql`INSERT INTO seed_meta (id, seed_version, seeded_at)
+      VALUES (1, ${options.seedVersion}, NOW())
+      ON CONFLICT (id) DO UPDATE SET seed_version = EXCLUDED.seed_version, seeded_at = EXCLUDED.seeded_at;`;
   }
 
   function mapProduct(row: ProductRow): Product {
@@ -393,7 +417,7 @@ export function createPostgresStore(options: PostgresStoreOptions): OrdersStore 
     async reset() {
       await ensureSchema();
       const { sql } = await db();
-      await sql`TRUNCATE order_events, order_items, orders, customers, products, admin_users RESTART IDENTITY CASCADE;`;
+      await sql`TRUNCATE order_events, order_items, orders, customers, products, admin_users, seed_meta RESTART IDENTITY CASCADE;`;
       await seed();
     },
   };

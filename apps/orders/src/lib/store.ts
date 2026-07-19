@@ -18,7 +18,7 @@ import {
  * password, so it seeds placeholder hashes it will never verify against.
  */
 
-const SEED_VERSION = process.env.SEED_VERSION ?? "kahwa-v1";
+const SEED_VERSION = process.env.SEED_VERSION ?? "kahwa-v2";
 
 const ADMIN_SEED = [
   { id: "adm_owner", name: "Demo Owner", email: "owner@demo", passwordHash: "seeded-in-admin-app", role: "owner" as const },
