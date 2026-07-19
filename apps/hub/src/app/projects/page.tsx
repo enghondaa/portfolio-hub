@@ -56,7 +56,7 @@ export default function ProjectsPage() {
         <div className="mt-6">
           <ScrollStage label="Demo projects">
             {projects.map((project, i) => (
-              <div key={project.slug} data-stage-item className="w-[min(78vw,420px)] shrink-0 snap-center">
+              <div key={project.slug} data-stage-item className="flex w-[min(78vw,420px)] shrink-0 snap-center">
                 <ProjectCard
                   index={i}
                   href={`/projects/${project.slug}`}
@@ -65,6 +65,7 @@ export default function ProjectsPage() {
                   stack={project.stack}
                   tag={project.tag}
                   featured={project.flagship}
+                  fill
                 />
               </div>
             ))}

@@ -41,6 +41,8 @@ function useMotionAllowed(): boolean {
   );
 }
 
+const EDGE_FADE = "linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%)";
+
 export function ScrollStage({ children, label }: { children: ReactNode; label: string }) {
   const motionAllowed = useMotionAllowed();
   const pinRef = useRef<HTMLDivElement>(null);
@@ -155,7 +157,21 @@ export function ScrollStage({ children, label }: { children: ReactNode; label: s
 
   return (
     <div ref={pinRef} style={{ height: `calc(100vh + ${distance}px)` }} className="relative">
-      <div ref={wrapRef} className="sticky top-0 flex h-screen items-center overflow-hidden">
+      {/*
+        Cards entering and leaving are otherwise sliced off dead straight by the
+        overflow clip, which looks like a rendering fault rather than a design.
+        A mask fades the last few percent on each side so they dissolve instead.
+        It masks the layer rather than tinting it, so it works over whatever the
+        page background happens to be and needs no matching gradient overlay.
+      */}
+      <div
+        ref={wrapRef}
+        style={{
+          maskImage: EDGE_FADE,
+          WebkitMaskImage: EDGE_FADE,
+        }}
+        className="sticky top-0 flex h-screen items-center overflow-hidden"
+      >
         <div
           ref={trackRef}
           onFocus={handleFocus}
