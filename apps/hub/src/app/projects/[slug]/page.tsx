@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PillButton } from "@/components/PillButton";
 import { projects, getProject, REPO_URL } from "@/lib/projects";
+import { LivePreview } from "@/components/LivePreview";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -72,9 +73,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </div>
       <p className="mt-3 text-lg text-[var(--color-neutral-600)]">{project.tagline}</p>
 
-      <div className="mt-10 aspect-video w-full rounded-3xl border border-dashed border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)] flex items-center justify-center">
-        <p className="font-mono text-sm text-[var(--color-neutral-400)]">Screenshot coming soon</p>
-      </div>
+      <LivePreview liveUrl={project.liveUrl} title={project.title} status={project.status} />
 
       <section className="mt-10">
         <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
