@@ -135,7 +135,10 @@ export const productInputSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().trim().email("Enter a valid email address"),
+  // A login identifier, not a validated address: the seeded demo accounts
+  // (owner@demo, staff@demo) aren't RFC-valid emails, and you look a login up
+  // rather than format-check it. Kept trimmed and non-empty.
+  email: z.string().trim().min(1, "Enter your email"),
   password: z.string().min(1, "Password is required"),
 });
 
