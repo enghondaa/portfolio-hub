@@ -43,7 +43,24 @@ function useMotionAllowed(): boolean {
 
 const EDGE_FADE = "linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%)";
 
-export function ScrollStage({ children, label }: { children: ReactNode; label: string }) {
+export function ScrollStage({
+  children,
+  label,
+  heading,
+}: {
+  children: ReactNode;
+  label: string;
+  /**
+   * Rendered inside the pinned area, above the track.
+   *
+   * Left in normal flow above the stage it reads as detached: the sticky child
+   * is a full viewport tall and centres the cards inside it, so the whole empty
+   * top half of that viewport opens up as a gap between the heading and the
+   * cards it belongs to. Pinning it with them closes the gap and makes the
+   * section look deliberate rather than broken.
+   */
+  heading?: ReactNode;
+}) {
   const motionAllowed = useMotionAllowed();
   const pinRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -145,13 +162,16 @@ export function ScrollStage({ children, label }: { children: ReactNode; label: s
 
   if (!motionAllowed) {
     return (
-      <div
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 sm:px-14"
-        role="group"
-        aria-label={label}
-      >
-        {children}
-      </div>
+      <>
+        {heading}
+        <div
+          className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 sm:px-14"
+          role="group"
+          aria-label={label}
+        >
+          {children}
+        </div>
+      </>
     );
   }
 
@@ -170,8 +190,9 @@ export function ScrollStage({ children, label }: { children: ReactNode; label: s
           maskImage: EDGE_FADE,
           WebkitMaskImage: EDGE_FADE,
         }}
-        className="sticky top-0 flex h-screen items-center overflow-hidden"
+        className="sticky top-0 flex h-screen flex-col justify-center gap-7 overflow-hidden"
       >
+        {heading && <div className="px-5 sm:px-14">{heading}</div>}
         <div
           ref={trackRef}
           onFocus={handleFocus}

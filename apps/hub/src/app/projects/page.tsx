@@ -50,11 +50,15 @@ export default function ProjectsPage() {
       </div>
 
       <div className="mt-16">
-        <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
-          Demos
-        </h2>
-        <div className="mt-6">
-          <ScrollStage label="Demo projects">
+        <div>
+          <ScrollStage
+            label="Demo projects"
+            heading={
+              <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
+                Demos
+              </h2>
+            }
+          >
             {projects.map((project, i) => (
               <div key={project.slug} data-stage-item className="flex w-[min(78vw,420px)] shrink-0 snap-center">
                 <ProjectCard
