@@ -62,6 +62,8 @@ export default function ProjectsPage() {
                 description={project.tagline}
                 stack={project.stack}
                 tag={project.tag}
+                featured={project.flagship}
+                wide={project.flagship}
               />
             </Reveal>
           ))}

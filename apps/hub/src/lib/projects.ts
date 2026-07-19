@@ -18,11 +18,27 @@ export interface Project {
   outcome?: string;
   /** Short badge shown on the work-grid card. */
   tag: string;
+  /** Marks the single headline demo, rendered larger and first. */
+  flagship?: boolean;
 }
 
 export const REPO_URL = "https://github.com/enghondaa/portfolio-hub";
 
 export const projects: Project[] = [
+  {
+    slug: "orderflow",
+    title: "OrderFlow",
+    tagline: "A two-app order platform: storefront + admin, one shared database",
+    problem:
+      "A small order-management product, not a page. A customer storefront (browse a coffee catalogue, check out with a simulated payment, track the order) and a separate auth-gated admin dashboard, both sitting on one shared data-layer package and one Postgres database, so advancing an order in admin updates the customer's tracking page. The status-transition rules live in one tested function that the UI and the API both consume.",
+    stack: ["Next.js", "TypeScript", "orders-core", "Zod", "Postgres", "Zustand"],
+    status: "live",
+    liveUrl: "https://mohand-orders-demo.vercel.app",
+    repoPath: "apps/orders",
+    outcome: "the most-tested package in the monorepo drives it",
+    tag: "Flagship · full product",
+    flagship: true,
+  },
   {
     slug: "taskboard",
     title: "Task Board",
