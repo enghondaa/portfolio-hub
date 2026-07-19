@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { projects, realProjects } from "@/lib/projects";
 import { Reveal } from "@/components/Reveal";
 import { ProjectCard } from "@/components/ProjectCard";
+import { ScrollStage } from "@/components/ScrollStage";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -52,21 +53,22 @@ export default function ProjectsPage() {
         <h2 className="font-[family-name:var(--font-heading)] text-xl font-bold tracking-[-0.02em] text-[var(--color-neutral-800)]">
           Demos
         </h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {projects.map((project, i) => (
-            <Reveal key={project.slug} delay={i * 0.06}>
-              <ProjectCard
-                index={i}
-                href={`/projects/${project.slug}`}
-                title={project.title}
-                description={project.tagline}
-                stack={project.stack}
-                tag={project.tag}
-                featured={project.flagship}
-                wide={project.flagship}
-              />
-            </Reveal>
-          ))}
+        <div className="mt-6">
+          <ScrollStage label="Demo projects">
+            {projects.map((project, i) => (
+              <div key={project.slug} data-stage-item className="w-[min(78vw,420px)] shrink-0 snap-center">
+                <ProjectCard
+                  index={i}
+                  href={`/projects/${project.slug}`}
+                  title={project.title}
+                  description={project.tagline}
+                  stack={project.stack}
+                  tag={project.tag}
+                  featured={project.flagship}
+                />
+              </div>
+            ))}
+          </ScrollStage>
         </div>
       </div>
     </div>
