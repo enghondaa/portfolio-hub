@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import "@portfolio/config/tailwind/theme.css";
+
+/*
+ * OrderFlow admin — an internal tool, not a storefront. A calm slate-and-ink
+ * back-office look: cool light-grey surfaces, deep ink, a single indigo
+ * accent. Deliberately quieter than the warm Kahwa storefront, because this
+ * is the operator side, and clearly its own thing next to the other apps.
+ */
+@theme {
+  --color-neutral-0: #eef1f6;    /* app background */
+  --color-neutral-50: #ffffff;   /* card */
+  --color-neutral-100: #e6eaf1;  /* chip / well / header row */
+  --color-neutral-200: rgba(30, 41, 59, 0.12); /* hairlines */
+  --color-neutral-400: #94a3b8;  /* faint text */
+  --color-neutral-600: #5b6675;  /* secondary text */
+  --color-neutral-700: #3b4453;  /* body copy */
+  --color-neutral-800: #171c26;  /* ink */
+  --color-neutral-950: #0c0f16;
+
+  --color-accent: #4f46e5;       /* indigo */
+  --color-accent-light: #6366f1;
+  --color-accent-soft: #e5e6fb;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
