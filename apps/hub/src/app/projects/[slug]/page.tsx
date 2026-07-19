@@ -97,10 +97,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </p>
       </section>
 
+      {project.altEntry && (
+        <p className="mt-8 rounded-xl border border-dashed border-[var(--color-neutral-200)] px-4 py-3 text-sm text-[var(--color-neutral-600)]">
+          {project.altEntry.note}
+        </p>
+      )}
+
       <div className="mt-10 flex flex-wrap items-center gap-3">
         {project.liveUrl && (
           <PillButton href={project.liveUrl} variant="accent" external>
             View live demo →
+          </PillButton>
+        )}
+        {project.altEntry && (
+          <PillButton href={project.altEntry.url} variant="outline" external>
+            {project.altEntry.label} →
           </PillButton>
         )}
         <PillButton href={`${REPO_URL}/tree/main/${project.repoPath}`} variant="outline" external>

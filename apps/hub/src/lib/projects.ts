@@ -10,6 +10,15 @@ export interface Project {
   status: ProjectStatus;
   /** Live demo URL, once deployed. */
   liveUrl?: string;
+  /**
+   * A second way into the same project, for demos that are more than one app.
+   * OrderFlow's admin panel is the reason this exists: it is the harder half of
+   * the build and it sits behind a login, so with only liveUrl pointing at the
+   * storefront a visitor had no route to it at all and would never know it was
+   * there. Anything listed here has to be openable by a stranger — no
+   * credentials to type, no setup.
+   */
+  altEntry?: { label: string; url: string; note: string };
   /** Source folder in the monorepo — always real, always available. */
   repoPath: string;
   /** A real, verifiable result from paid work this demo's pattern is based on (optional). */
@@ -34,6 +43,11 @@ export const projects: Project[] = [
     stack: ["Next.js", "TypeScript", "orders-core", "Zod", "Postgres", "Zustand"],
     status: "live",
     liveUrl: "https://mohand-orders-demo.vercel.app",
+    altEntry: {
+      label: "Open the admin panel",
+      url: "https://mohand-orders-admin.vercel.app/login",
+      note: "Sign in as Owner or Staff with one click — the two roles see different actions.",
+    },
     repoPath: "apps/orders",
     outcome: "the most-tested package in the monorepo drives it",
     tag: "Flagship · full product",

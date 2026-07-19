@@ -34,6 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             stack={["Next.js 16", "orders-core", "Zod", "Postgres", "Zustand"]}
             sourcePath="apps/orders"
             caseStudySlug="orderflow"
+            companion={{ label: "Admin panel →", url: "https://mohand-orders-admin.vercel.app/login" }}
           />
 
           <header className="sticky top-0 z-40 border-b border-[var(--color-neutral-200)] bg-[rgba(243,236,225,0.82)] backdrop-blur-xl">
