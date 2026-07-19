@@ -4,3 +4,4 @@ export * from "./pricing";
 export * from "./seed";
 export * from "./store";
 export { createMemoryStore, type MemoryStoreOptions } from "./adapters/memory";
+export { createPostgresStore, type PostgresStoreOptions } from "./adapters/postgres";

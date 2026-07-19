@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@import "@portfolio/config/tailwind/theme.css";
+
+/*
+ * OrderFlow storefront — "Kahwa Supply", a fictional specialty coffee
+ * roaster. Warm roastery paper, deep espresso ink, a terracotta accent, and
+ * a serif display face. Product-forward and editorial, deliberately unlike
+ * the hub's brighter amber, the Task Board's emerald, the Analytics violet,
+ * and the CMS gold-on-black.
+ */
+@theme {
+  --color-neutral-0: #f3ece1;    /* roastery paper */
+  --color-neutral-50: #fbf7f0;   /* card */
+  --color-neutral-100: #ece1d2;  /* chip / well */
+  --color-neutral-200: rgba(58, 38, 24, 0.14); /* hairlines */
+  --color-neutral-400: #a08f7d;  /* faint text */
+  --color-neutral-600: #6f5c48;  /* secondary text */
+  --color-neutral-700: #4e3d2d;  /* body copy */
+  --color-neutral-800: #2c1e12;  /* espresso ink */
+  --color-neutral-950: #1c120a;  /* darkest surface */
+
+  --color-accent: #c05a2b;       /* terracotta */
+  --color-accent-light: #dd7f4f;
+  --color-accent-soft: #eaddcd;
+  --color-success: #4f7a3f;
+  --color-warning: #b4791f;
+  --color-danger: #b23a2e;
+}
+
+body {
+  background-image: radial-gradient(1100px circle at 50% -15%, rgba(192, 90, 43, 0.08), transparent 55%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-neutral-50);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
