@@ -228,6 +228,64 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  apps/interview:
+    dependencies:
+      '@portfolio/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      framer-motion:
+        specifier: ^12.42.2
+        version: 12.42.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      lucide-react:
+        specifier: ^1.24.0
+        version: 1.24.0(react@19.2.4)
+      next:
+        specifier: 16.2.10
+        version: 16.2.10(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      prismjs:
+        specifier: ^1.30.0
+        version: 1.30.0
+      react:
+        specifier: 19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: 19.2.4
+        version: 19.2.4(react@19.2.4)
+      zustand:
+        specifier: ^5.0.14
+        version: 5.0.14(@types/react@19.2.17)(react@19.2.4)
+    devDependencies:
+      '@portfolio/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@tailwindcss/postcss':
+        specifier: ^4
+        version: 4.3.2
+      '@types/node':
+        specifier: ^20
+        version: 20.19.43
+      '@types/prismjs':
+        specifier: ^1.26.6
+        version: 1.26.6
+      '@types/react':
+        specifier: ^19
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.2.3(@types/react@19.2.17)
+      eslint:
+        specifier: ^9
+        version: 9.39.5(jiti@2.7.0)
+      eslint-config-next:
+        specifier: 16.2.10
+        version: 16.2.10(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      tailwindcss:
+        specifier: ^4
+        version: 4.3.2
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
   apps/orders:
     dependencies:
       '@portfolio/orders-core':
@@ -2359,6 +2417,9 @@ packages:
 
   '@types/pg@8.11.6':
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
+
+  '@types/prismjs@1.26.6':
+    resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -4907,6 +4968,10 @@ packages:
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
+  prismjs@1.30.0:
+    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
+    engines: {node: '>=6'}
 
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
@@ -7475,6 +7540,8 @@ snapshots:
       '@types/node': 22.20.1
       pg-protocol: 1.15.0
       pg-types: 4.1.0
+
+  '@types/prismjs@1.26.6': {}
 
   '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
@@ -10942,6 +11009,8 @@ snapshots:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.3.1
+
+  prismjs@1.30.0: {}
 
   process@0.11.10: {}
 
