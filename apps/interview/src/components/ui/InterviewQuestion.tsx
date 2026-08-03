@@ -24,7 +24,9 @@ function renderMarkdown(text: string): string {
   const codeLines: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+    // Indexed access is possibly-undefined under noUncheckedIndexedAccess even
+    // though i is bounded by lines.length; an empty string parses identically.
+    const line = lines[i] ?? '';
 
     // Fenced code block start
     if (!inCode && line.startsWith('```')) {

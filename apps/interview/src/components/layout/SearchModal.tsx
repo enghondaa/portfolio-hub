@@ -42,8 +42,12 @@ export default function SearchModal({ onClose }: SearchModalProps) {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setSelectedIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === 'Enter' && results[selectedIndex]) {
-      navigate(results[selectedIndex]);
+    } else if (e.key === 'Enter') {
+      // Read once into a local. Testing results[selectedIndex] in the branch
+      // condition does not narrow the second, separate lookup, so the argument
+      // stayed possibly-undefined.
+      const selected = results[selectedIndex];
+      if (selected) navigate(selected);
     } else if (e.key === 'Escape') {
       onClose();
     }

@@ -56,8 +56,13 @@ export default function CodeBlock({
   // Run Prism only on the client to avoid SSR/hydration mismatch
   useEffect(() => {
     try {
-      const grammar = Prism.languages[lang] || Prism.languages.javascript;
-      setHighlighted(Prism.highlight(editedCode, grammar, lang));
+      // Prism.languages is an index signature, so every lookup is
+      // possibly-undefined, including the javascript fallback: a grammar only
+      // exists once its component file has been imported. Falling through to
+      // escaped plain text is the correct outcome, and it is the same thing the
+      // catch below already does for a grammar that fails mid-highlight.
+      const grammar = Prism.languages[lang] ?? Prism.languages.javascript;
+      setHighlighted(grammar ? Prism.highlight(editedCode, grammar, lang) : escapeHtml(editedCode));
     } catch {
       setHighlighted(escapeHtml(editedCode));
     }

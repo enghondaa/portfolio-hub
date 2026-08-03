@@ -44,9 +44,14 @@ export default function Header({ onMenuClick, showMenu = false }: HeaderProps) {
   }, []);
 
   const handleRandomQuestion = () => {
+    // Indexed access is possibly-undefined under noUncheckedIndexedAccess.
+    // Doing nothing on an empty pool is the right behaviour here: navigating to
+    // /modules/undefined/undefined would be worse than the button appearing
+    // inert, and the pool is only empty if the content files failed to load.
     const question = ALL_INTERVIEW_QUESTIONS[
       Math.floor(Math.random() * ALL_INTERVIEW_QUESTIONS.length)
     ];
+    if (!question) return;
     router.push(`/modules/${question.moduleId}/${question.topicId}#interview-questions`);
   };
 

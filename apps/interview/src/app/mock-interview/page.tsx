@@ -12,13 +12,32 @@ const MODULE_LABELS: Record<string, string> = Object.fromEntries(
   MODULES.map((m) => [m.id, m.title])
 );
 
+/**
+ * Pick a random element, avoiding `exclude` where possible.
+ *
+ * Callers must pass a non-empty array. Every call site already guarantees that
+ * (the question pool falls back to the full list when a filter empties it), so
+ * the throw is unreachable rather than defensive — it exists because the
+ * shared tsconfig enables noUncheckedIndexedAccess, which correctly treats
+ * arr[0] as possibly undefined, and swallowing that with a fallback value
+ * would hide a genuinely broken content file instead of reporting it.
+ *
+ * The retry is also bounded now. The original loop spun until it drew
+ * something other than `exclude`, which never terminates if every element in
+ * the array equals it.
+ */
 function pickRandom<T>(arr: T[], exclude?: T): T {
-  if (arr.length === 1) return arr[0];
-  let pick: T;
-  do {
-    pick = arr[Math.floor(Math.random() * arr.length)];
-  } while (pick === exclude);
-  return pick;
+  const first = arr[0];
+  if (first === undefined) {
+    throw new Error('pickRandom was called with an empty array');
+  }
+  if (arr.length === 1) return first;
+
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const candidate = arr[Math.floor(Math.random() * arr.length)];
+    if (candidate !== undefined && candidate !== exclude) return candidate;
+  }
+  return first;
 }
 
 export default function MockInterviewPage() {

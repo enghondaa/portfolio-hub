@@ -4,8 +4,17 @@ import { useProgressStore } from '@/lib/store';
 import { MODULES } from '@/lib/modules';
 import ProgressBar from '@/components/ui/ProgressBar';
 import { CheckCircle2, Clock, Star, ArrowRight, TrendingDown } from 'lucide-react';
+import type { ModuleId } from '@/types';
 
-const MODULE_COLORS: Record<string, { border: string; bg: string; text: string }> = {
+/**
+ * Keyed by ModuleId rather than string. A string-keyed Record makes every
+ * lookup possibly-undefined under noUncheckedIndexedAccess, which would force
+ * a fallback at the call site and quietly render an unstyled card if a module
+ * were ever added without a colour. Keying on the union instead makes the map
+ * exhaustive: a missing entry is a compile error, and the lookup below needs
+ * no guard because the key is always present.
+ */
+const MODULE_COLORS: Record<ModuleId, { border: string; bg: string; text: string }> = {
   javascript:         { border: 'border-[var(--color-warning)]/30',  bg: 'bg-[var(--color-warning)]/10',  text: 'text-[var(--color-warning)]' },
   react:              { border: 'border-[var(--color-accent-light)]/30',    bg: 'bg-[var(--color-accent-soft)]',    text: 'text-[var(--color-accent-light)]' },
   nextjs:             { border: 'border-[var(--color-neutral-200)]',   bg: 'bg-[var(--color-neutral-100)]',   text: 'text-[var(--color-neutral-700)]' },
@@ -103,7 +112,13 @@ export default function DashboardPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             {weakAreas.slice(0, 8).map((key) => {
+              // key is "moduleId/topicId". Destructuring an array yields
+              // possibly-undefined entries under noUncheckedIndexedAccess, and the
+              // topic guard below narrows `topic` without narrowing either id. A
+              // malformed key should drop the row rather than render a link to
+              // /modules/undefined/undefined.
               const [moduleId, topicId] = key.split('/');
+              if (!moduleId || !topicId) return null;
               const mod = MODULES.find((m) => m.id === moduleId);
               const topic = mod?.topics.find((t) => t.id === topicId);
               if (!topic) return null;
@@ -161,7 +176,13 @@ export default function DashboardPage() {
           </h2>
           <div className="space-y-1">
             {recentTopics.map(([key, dateStr]) => {
+              // key is "moduleId/topicId". Destructuring an array yields
+              // possibly-undefined entries under noUncheckedIndexedAccess, and the
+              // topic guard below narrows `topic` without narrowing either id. A
+              // malformed key should drop the row rather than render a link to
+              // /modules/undefined/undefined.
               const [moduleId, topicId] = key.split('/');
+              if (!moduleId || !topicId) return null;
               const mod = MODULES.find((m) => m.id === moduleId);
               const topic = mod?.topics.find((t) => t.id === topicId);
               if (!topic || !mod) return null;
