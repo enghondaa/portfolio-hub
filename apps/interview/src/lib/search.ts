@@ -1,10 +1,13 @@
 import { ALL_CONTENT } from './content/index';
 import { MODULES } from './modules';
-import type { SearchResult } from '@/types';
+import type { ModuleId, SearchResult } from '@/types';
 
 interface SearchIndex {
   topicId: string;
-  moduleId: string;
+  // ModuleId, not string. Every entry is built from a TopicContent whose
+  // moduleId is already the union, so widening it here only forced a cast back
+  // down at the point results are returned.
+  moduleId: ModuleId;
   topicTitle: string;
   moduleTitle: string;
   text: string;
@@ -105,7 +108,7 @@ export function search(query: string, limit = 20): SearchResult[] {
 
     results.push({
       topicId: entry.topicId,
-      moduleId: entry.moduleId as any,
+      moduleId: entry.moduleId,
       topicTitle: entry.topicTitle,
       moduleTitle: entry.moduleTitle,
       matchType: entry.type,

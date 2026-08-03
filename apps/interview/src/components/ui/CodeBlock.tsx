@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useMemo, useSyncExternalStore } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-typescript';
@@ -36,7 +36,11 @@ export default function CodeBlock({
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const [showExplanation, setShowExplanation] = useState(!studyMode);
-  const [highlighted, setHighlighted] = useState<string | null>(null);
+  // A mount flag without the setState-in-effect the lint rule rejects.
+  // The server snapshot is false and the client snapshot is true, so the first
+  // client render matches the server exactly and React swaps to the highlighted
+  // markup on the following pass. Nothing to subscribe to, hence the no-op.
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
 
   // Runner States
   const [isEditing, setIsEditing] = useState(false);
@@ -53,20 +57,28 @@ export default function CodeBlock({
   const lang = language === 'tsx' ? 'tsx' : language === 'typescript' ? 'typescript' : 'javascript';
   const isJavaScript = lang === 'javascript';
 
-  // Run Prism only on the client to avoid SSR/hydration mismatch
-  useEffect(() => {
+  // Highlighting is derived from the code, not state pushed by an effect.
+  // Setting it inside useEffect meant every edit rendered once with the stale
+  // markup and again with the new, and the first render after mount always
+  // showed unhighlighted text. Prism runs during render on the client only;
+  // `mounted` keeps the server pass and the first client pass identical so
+  // there is no hydration mismatch.
+  const highlighted = useMemo(() => {
+    if (!mounted) return escapeHtml(editedCode);
     try {
       // Prism.languages is an index signature, so every lookup is
       // possibly-undefined, including the javascript fallback: a grammar only
       // exists once its component file has been imported. Falling through to
-      // escaped plain text is the correct outcome, and it is the same thing the
-      // catch below already does for a grammar that fails mid-highlight.
+      // escaped plain text is the same outcome the catch already gives for a
+      // grammar that fails mid-highlight.
       const grammar = Prism.languages[lang] ?? Prism.languages.javascript;
-      setHighlighted(grammar ? Prism.highlight(editedCode, grammar, lang) : escapeHtml(editedCode));
+      return grammar ? Prism.highlight(editedCode, grammar, lang) : escapeHtml(editedCode);
     } catch {
-      setHighlighted(escapeHtml(editedCode));
+      return escapeHtml(editedCode);
     }
-  }, [editedCode, lang]);
+  }, [editedCode, lang, mounted]);
+
+
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(editedCode);
@@ -79,23 +91,25 @@ export default function CodeBlock({
     setShowConsole(true);
     const logs: string[] = [];
     const customConsole = {
-      log: (...args: any[]) => {
+      log: (...args: unknown[]) => {
         logs.push(args.map(arg => 
           typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
         ).join(' '));
       },
-      error: (...args: any[]) => {
+      error: (...args: unknown[]) => {
         logs.push('❌ ' + args.map(String).join(' '));
       },
-      warn: (...args: any[]) => {
+      warn: (...args: unknown[]) => {
         logs.push('⚠️ ' + args.map(String).join(' '));
       }
     };
     try {
       const runner = new Function('console', editedCode);
       runner(customConsole);
-    } catch (err: any) {
-      customConsole.error(err.message || err);
+    } catch (err) {
+      // A thrown value is not required to be an Error, and user code in this
+      // editor can throw anything at all.
+      customConsole.error(err instanceof Error ? err.message : String(err));
     }
     setConsoleLogs(logs.length > 0 ? logs : ['(No console output)']);
     setIsRunning(false);
@@ -176,7 +190,7 @@ export default function CodeBlock({
         ) : (
           <pre className="p-4 text-sm leading-relaxed" dir="ltr">
             <code
-              dangerouslySetInnerHTML={{ __html: highlighted ?? escapeHtml(editedCode) }}
+              dangerouslySetInnerHTML={{ __html: highlighted }}
             />
           </pre>
         )}

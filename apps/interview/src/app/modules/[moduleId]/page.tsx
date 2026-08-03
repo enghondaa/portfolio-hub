@@ -1,5 +1,7 @@
+// `module` is a reserved identifier in Next's lint rules: it collides with
+// CommonJS's module object and the bundler flags any binding that shadows it.
+// Renamed to `mod`, which is what the client components already use.
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { MODULE_MAP, MODULES } from '@/lib/modules';
 import ModuleOverview from './ModuleOverview';
@@ -14,14 +16,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { moduleId } = await params;
-  const module = MODULE_MAP[moduleId];
-  if (!module) return {};
-  return { title: module.title, description: module.description };
+  const mod = MODULE_MAP[moduleId];
+  if (!mod) return {};
+  return { title: mod.title, description: mod.description };
 }
 
 export default async function ModulePage({ params }: Props) {
   const { moduleId } = await params;
-  const module = MODULE_MAP[moduleId];
-  if (!module) notFound();
-  return <ModuleOverview module={module} />;
+  const mod = MODULE_MAP[moduleId];
+  if (!mod) notFound();
+  return <ModuleOverview module={mod} />;
 }

@@ -61,7 +61,7 @@ import InterviewQuestionCard from '@/components/ui/InterviewQuestion';
 import ConfidenceRating from '@/components/ui/ConfidenceRating';
 import type { TopicContent, TopicMeta } from '@/types';
 import { getTopicContent } from '@/lib/content';
-import { UI_TRANSLATIONS, MODULE_TRANSLATIONS, TOPIC_TRANSLATIONS } from '@/lib/translations';
+import { UI_TRANSLATIONS, TOPIC_TRANSLATIONS } from '@/lib/translations';
 
 interface TopicPageProps {
   topic: TopicContent;
@@ -80,7 +80,6 @@ export default function TopicPage({ topic, prevTopic, nextTopic }: TopicPageProp
   }, [topicKey, markStudied]);
 
   const t = UI_TRANSLATIONS[language || 'en'];
-  const modTrans = language === 'ar' ? MODULE_TRANSLATIONS.ar : null;
 
   const prevTitle = prevTopic ? (language === 'ar' && prevTopic.id in TOPIC_TRANSLATIONS.ar
     ? TOPIC_TRANSLATIONS.ar[prevTopic.id as keyof typeof TOPIC_TRANSLATIONS.ar]

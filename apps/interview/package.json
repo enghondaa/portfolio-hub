@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@portfolio/ui": "workspace:*",

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 
 interface TimerProps {
@@ -12,16 +12,32 @@ export default function Timer({ durationSeconds = 180, onExpire, autoStart = fal
   const [remaining, setRemaining] = useState(durationSeconds);
   const [running, setRunning] = useState(autoStart);
 
+  // `active` is derived rather than stored. The clock previously flipped
+  // `running` to false on reaching zero, which is a setState inside an effect:
+  // it schedules an extra render before paint and the lint rule rejects it.
+  // Deriving the state means the interval simply stops having anything to do.
+  const active = running && remaining > 0;
+
   useEffect(() => {
-    if (!running) return;
-    if (remaining <= 0) {
-      setRunning(false);
-      onExpire?.();
+    if (!active) return;
+    const id = setInterval(() => setRemaining((r) => Math.max(0, r - 1)), 1000);
+    return () => clearInterval(id);
+  }, [active]);
+
+  // onExpire is a callback, not state, so firing it from an effect is fine.
+  // The ref guards against firing twice for the same expiry — effects can rerun
+  // when onExpire's identity changes, and the caller should not see duplicates.
+  const hasExpired = useRef(false);
+  useEffect(() => {
+    if (remaining > 0) {
+      hasExpired.current = false;
       return;
     }
-    const id = setInterval(() => setRemaining((r) => r - 1), 1000);
-    return () => clearInterval(id);
-  }, [running, remaining, onExpire]);
+    if (!hasExpired.current) {
+      hasExpired.current = true;
+      onExpire?.();
+    }
+  }, [remaining, onExpire]);
 
   const reset = useCallback(() => {
     setRemaining(durationSeconds);
@@ -45,10 +61,10 @@ export default function Timer({ durationSeconds = 180, onExpire, autoStart = fal
         />
       </div>
       <button
-        onClick={() => setRunning(!running)}
+        onClick={() => setRunning(!active)}
         className="p-1.5 rounded hover:bg-[var(--color-neutral-100)] text-[var(--color-neutral-600)] hover:text-[var(--color-neutral-950)] transition-colors"
       >
-        {running ? <Pause size={14} /> : <Play size={14} />}
+        {active ? <Pause size={14} /> : <Play size={14} />}
       </button>
       <button
         onClick={reset}

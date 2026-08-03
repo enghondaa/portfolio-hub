@@ -1,3 +1,6 @@
+// `module` is a reserved identifier in Next's lint rules: it collides with
+// CommonJS's module object and the bundler flags any binding that shadows it.
+// Renamed to `mod`, which is what the client components already use.
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { MODULE_MAP, MODULES } from '@/lib/modules';
@@ -17,29 +20,29 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { moduleId, topicId } = await params;
-  const module = MODULE_MAP[moduleId];
-  if (!module) return {};
-  const topic = module.topics.find((t) => t.id === topicId);
+  const mod = MODULE_MAP[moduleId];
+  if (!mod) return {};
+  const topic = mod.topics.find((t) => t.id === topicId);
   if (!topic) return {};
   return {
-    title: `${topic.title} — ${module.title}`,
+    title: `${topic.title} — ${mod.title}`,
     description: `Study ${topic.title} for your frontend interview. Estimated time: ${topic.estimatedTime}.`,
   };
 }
 
 export default async function TopicPageRoute({ params }: Props) {
   const { moduleId, topicId } = await params;
-  const module = MODULE_MAP[moduleId];
-  if (!module) notFound();
+  const mod = MODULE_MAP[moduleId];
+  if (!mod) notFound();
 
-  const topicIndex = module.topics.findIndex((t) => t.id === topicId);
+  const topicIndex = mod.topics.findIndex((t) => t.id === topicId);
   if (topicIndex === -1) notFound();
 
   const content = getTopicContent(moduleId as ModuleId, topicId);
   if (!content) notFound();
 
-  const prevTopic = topicIndex > 0 ? module.topics[topicIndex - 1] : null;
-  const nextTopic = topicIndex < module.topics.length - 1 ? module.topics[topicIndex + 1] : null;
+  const prevTopic = topicIndex > 0 ? mod.topics[topicIndex - 1] : null;
+  const nextTopic = topicIndex < mod.topics.length - 1 ? mod.topics[topicIndex + 1] : null;
 
   return (
     <TopicPage

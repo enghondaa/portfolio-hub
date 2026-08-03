@@ -20,7 +20,6 @@ function renderMarkdown(text: string): string {
   const html: string[] = [];
   let inList = false;
   let inCode = false;
-  let codeLang = '';
   const codeLines: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
@@ -32,7 +31,6 @@ function renderMarkdown(text: string): string {
     if (!inCode && line.startsWith('```')) {
       if (inList) { html.push('</ul>'); inList = false; }
       inCode = true;
-      codeLang = line.slice(3).trim();
       codeLines.length = 0;
       continue;
     }

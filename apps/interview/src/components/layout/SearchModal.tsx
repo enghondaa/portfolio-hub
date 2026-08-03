@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { search } from '@/lib/search';
@@ -11,7 +11,6 @@ interface SearchModalProps {
 
 export default function SearchModal({ onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -20,15 +19,23 @@ export default function SearchModal({ onClose }: SearchModalProps) {
     inputRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    if (query.trim().length >= 2) {
-      const res = search(query, 10);
-      setResults(res);
-      setSelectedIndex(0);
-    } else {
-      setResults([]);
-    }
-  }, [query]);
+  // Results are derived from the query, not stored. Mirroring them into state
+  // through an effect meant every keystroke rendered once with the old results,
+  // then again with the new ones — visible as a frame of stale matches. The
+  // selection index still needs resetting when the query changes, and useMemo
+  // is the place that happens without a second render pass.
+  const results = useMemo(() => (query.trim().length >= 2 ? search(query, 10) : []), [query]);
+
+  // Adjusting state during render rather than in an effect. This is React's
+  // documented pattern for "reset something when a value changes": the extra
+  // render happens before the browser paints, so nothing flickers, whereas an
+  // effect would paint the old selection first. The lint rule rejects the
+  // effect form for exactly that reason.
+  const [lastQuery, setLastQuery] = useState(query);
+  if (query !== lastQuery) {
+    setLastQuery(query);
+    setSelectedIndex(0);
+  }
 
   const navigate = (result: SearchResult) => {
     router.push(`/modules/${result.moduleId}/${result.topicId}`);
@@ -114,7 +121,7 @@ export default function SearchModal({ onClose }: SearchModalProps) {
           </ul>
         ) : query.length >= 2 ? (
           <div className="px-4 py-8 text-center text-[var(--color-neutral-400)]">
-            No results for "<span className="text-[var(--color-neutral-600)]">{query}</span>"
+            No results for &quot;<span className="text-[var(--color-neutral-600)]">{query}</span>&quot;
           </div>
         ) : (
           <div className="px-4 py-6 text-center text-[var(--color-neutral-400)] text-sm">
