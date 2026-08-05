@@ -174,6 +174,7 @@ export const MODULES: ModuleInfo[] = [
     topics: [
       { id: 'js-essentials', title: 'أساسيات JavaScript المتكررة', estimatedTime: '50 min', moduleId: 'rapid-fire' },
       { id: 'react-essentials', title: 'أساسيات React المتكررة', estimatedTime: '55 min', moduleId: 'rapid-fire' },
+      { id: 'next-essentials', title: 'أساسيات Next.js والباقي', estimatedTime: '55 min', moduleId: 'rapid-fire' },
     ],
   },
 ];

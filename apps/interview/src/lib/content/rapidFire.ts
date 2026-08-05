@@ -563,5 +563,302 @@ if (!session) redirect('/login');
           'React 18 بتحاكي mount ثم unmount ثم mount تاني في وضع التطوير عشان تكشف الـ effects اللي تنظيفها ناقص. React 17 مكنتش بتعمل ده للـ effects. الفرق ده هو السؤال نفسه.',
       },
     ],
+  },,
+  {
+    id: 'next-essentials',
+    moduleId: 'rapid-fire',
+    title: 'أساسيات Next.js والباقي',
+    description:
+      'استراتيجيات الرندرة، الـ routers، الـ lazy loading، والأسئلة اللي فضلت من القايمة.',
+    estimatedTime: '55 دقيقة',
+    sections: [
+      {
+        title: 'ملحوظة عن الإصدارات',
+        content: `Next.js بتتغيّر بسرعة، وأكتر حاجة بتوقّع الناس في الانترفيو هي إنهم بيقولوا سلوك اتغيّر من سنة.
+
+أهم اتنين لازم تعرفهم:
+
+- **الـ \`fetch\` بقى uncached بشكل افتراضي من Next 15.** قبل كده كان بيتكاش لوحده. لو قلت العكس، اللي قدامك هيعرف إنك مستخدمتش الفريموورك من مدة.
+- **الـ \`cookies()\` و \`headers()\` و \`params\` و \`searchParams\` بقوا async من Next 15**، ولازم \`await\`. والوصول المتزامن **اتشال خالص في Next 16**.`,
+      },
+    ],
+    codeExamples: [
+      {
+        title: 'lazy loading مع Suspense',
+        language: 'jsx',
+        code: `// في React عادي
+const Chart = lazy(() => import('./Chart'));
+
+<Suspense fallback={<Skeleton />}>
+  <Chart />
+</Suspense>
+
+// في Next.js الأداة المناسبة هي next/dynamic
+const Chart = dynamic(() => import('./Chart'), {
+  loading: () => <Skeleton />,
+  ssr: false,  // لو الكومبوننت محتاج window
+});
+
+// وفي App Router، ملف loading.tsx
+// بيتحوّل لـ Suspense boundary تلقائيًا حوالين الصفحة`,
+        explanation:
+          'الـ React.lazy بيشتغل جوه Client Components بس. في Next الأفضل next/dynamic لإنها بتفهم الـ SSR وبتديك خيار توقفه.',
+      },
+      {
+        title: 'custom hook — الشكل الصح',
+        language: 'jsx',
+        code: `function useDebounce(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);  // التنظيف بيلغي القديم
+  }, [value, delay]);
+
+  return debounced;
+}
+
+// الاستخدام:
+const query = useDebounce(input, 300);
+useEffect(() => { search(query); }, [query]);`,
+        explanation:
+          'الـ custom hook مجرد function اسمها بيبدأ بـ use وبتنادي hooks تانية. مفيش سحر — الاسم هو اللي بيخلي الـ lint rules تشتغل عليها.',
+      },
+    ],
+    interviewQuestions: [
+      {
+        question: 'إيه الفرق بين CSR و SSR و SSG و ISR؟',
+        difficulty: 'medium',
+        answer: `الفرق في **إمتى الـ HTML بيتعمل**:
+
+- **CSR** — المتصفح بيستلم صفحة شبه فاضية وبيبني كل حاجة بالـ JavaScript. أبطأ أول تحميل، وأسوأ للـ SEO.
+- **SSR** — السيرفر بيبني الـ HTML **مع كل طلب**. البيانات دايمًا طازة، بس كل زيارة بتكلّف حساب.
+- **SSG** — الـ HTML بيتبني **وقت الـ build** مرة واحدة. أسرع حاجة ممكنة، بس المحتوى ثابت لحد الـ build الجاي.
+- **ISR** — SSG بس الصفحة بتتجدد في الخلفية كل فترة. بتاخد سرعة الـ static مع محتوى بيتحدّث.
+
+في App Router الاختيار بيتحدد من الـ \`fetch\`:
+
+\`\`\`javascript
+fetch(url)                                  // SSR — uncached افتراضيًا من Next 15
+fetch(url, { cache: 'force-cache' })        // SSG
+fetch(url, { next: { revalidate: 60 } })    // ISR
+\`\`\`
+
+**القاعدة العملية:** ابدأ بـ static، وارفع لـ ISR لو المحتوى بيتغيّر، وSSR لو لازم يبقى شخصي أو لحظي، وCSR للحاجات اللي بعد تسجيل الدخول ومحدش محتاج يفهرسها.`,
+      },
+      {
+        question: 'إيه الفرق بين App Router و Pages Router؟',
+        difficulty: 'medium',
+        answer: `**Pages Router** هو النظام القديم — كل ملف في \`pages/\` بيبقى route، وجلب البيانات بيتم من \`getServerSideProps\` و \`getStaticProps\`، وكل كومبوننت client component.
+
+**App Router** هو الجديد (من Next 13) — مجلد \`app/\` بملفات ليها معنى: \`page.tsx\` و \`layout.tsx\` و \`loading.tsx\` و \`error.tsx\`.
+
+الفروق اللي بتفرّق فعلًا:
+
+1. **Server Components افتراضيًا** — الكومبوننت مبيتبعتش للمتصفح إلا لو كتبت \`'use client'\`. ده بيقلل الـ bundle بشكل حقيقي.
+2. **جلب البيانات جوه الكومبوننت** بـ \`async/await\` بدل دوال منفصلة على مستوى الصفحة.
+3. **Layouts متداخلة بتحافظ على حالتها** بين التنقلات. الـ Pages Router كان ليه \`_app\` واحد بس.
+4. **Streaming و Suspense** — \`loading.tsx\` بيبعت جزء من الصفحة قبل ما البيانات تخلص.
+
+**الاتنين بيشتغلوا مع بعض في نفس المشروع**، فالانتقال ممكن يبقى تدريجي. والـ Pages Router لسه مدعوم مش deprecated، بس المميزات الجديدة كلها بتنزل في App Router.`,
+      },
+      {
+        question: 'إيه الفرق بين `useEffect` و `useLayoutEffect`؟',
+        difficulty: 'medium',
+        answer: `التوقيت بالنسبة للرسم.
+
+- **\`useEffect\`** بيشتغل **بعد** ما المتصفح يرسم. غير متزامن، مبيأخّرش ظهور الصفحة.
+- **\`useLayoutEffect\`** بيشتغل بعد تعديل الـ DOM و**قبل** الرسم. متزامن، بيأخّر الرسم لحد ما يخلص.
+
+**استخدم \`useEffect\` دايمًا** إلا في حالة واحدة: لما **تقيس** الـ DOM وتغيّر على أساس القياس. ساعتها الـ \`useEffect\` بيخلي المستخدم يشوف الحالة القديمة لفريم واحد — رفرفة مرئية.
+
+\`\`\`jsx
+useLayoutEffect(() => {
+  const { height } = ref.current.getBoundingClientRect();
+  setHeight(height);  // من غيرها المستخدم هيشوف القفزة
+}, []);
+\`\`\`
+
+تحذيرين:
+
+1. **بيقفل الرسم**، فأي شغل تقيل جواه بيبطّء الصفحة فعليًا.
+2. **بيدي warning في SSR** لإن مفيش layout على السيرفر أصلًا يتقاس.`,
+      },
+      {
+        question: 'إيه الفرق بين `useMemo` و `useCallback` و `React.memo`؟',
+        difficulty: 'medium',
+        answer: `- **\`useMemo\`** بيحفظ **قيمة** — نتيجة حسبة تقيلة
+- **\`useCallback\`** بيحفظ **function** — نفس الـ reference بين الـ renders
+- **\`React.memo\`** بيغلّف **كومبوننت** ويمنع الـ re-render الجاي من الأب
+
+\`useCallback(fn, deps)\` هي حرفيًا \`useMemo(() => fn, deps)\`.
+
+**التلاتة بيشتغلوا مع بعض، وده اللي الناس بتفوّته:**
+
+\`\`\`jsx
+const Row = React.memo(RowComponent);
+
+// من غير useCallback، ده بيبوّظ الـ memo:
+<Row onClick={() => select(id)} />   // reference جديدة كل render
+\`\`\`
+
+الـ \`memo\` بتقارن الـ props مقارنة سطحية، فبتلاقي function مختلفة كل مرة وبترندر برضو. يعني الـ memo بقت تكلفة من غير فايدة.
+
+**ومتستخدمهمش في كل حاجة.** كل واحد منهم بيكلّف ذاكرة ومقارنة. لو الحسبة رخيصة، الـ memo أغلى منها. القاعدة: قيس الأول بالـ Profiler، وبعدين حسّن.
+
+وفي **React Compiler** (وصل 1.0) الكلام ده كله بيتعمل أوتوماتيك، والكتابة اليدوية بتقل.`,
+      },
+      {
+        question: 'إيه هو الـ Custom Hook وإمتى تعمل واحد؟',
+        difficulty: 'easy',
+        answer: `**function عادية اسمها بيبدأ بـ \`use\` وبتنادي hooks تانية جواها.** مفيش أي سحر — الاسم هو اللي بيخلي الـ ESLint rules تتحقق من قواعد الـ hooks جواها.
+
+الغرض: **مشاركة المنطق مش الواجهة.**
+
+\`\`\`jsx
+function useDebounce(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return debounced;
+}
+\`\`\`
+
+**النقطة المهمة:** كل كومبوننت بينادي الـ hook بياخد **نسخة مستقلة من الـ state**. مفيش مشاركة بين الكومبوننتات — لو محتاج state مشترك، ده شغل الـ context أو مكتبة state.
+
+اعمل custom hook لما تلاقي نفس المنطق (effect + state + تنظيف) متكرر في أكتر من مكان. ده اللي حل مشكلة الـ HOCs والـ render props اللي كانت بتعمل شجرة عميقة.`,
+      },
+      {
+        question: 'إيه الفرق بين Debouncing و Throttling؟',
+        difficulty: 'medium',
+        answer: `الاتنين بيقللوا معدل تنفيذ function، بس بمنطق مختلف:
+
+- **Debounce** — استنى لحد ما الحركة **تهدى**، وبعدين نفّذ مرة واحدة. لو الأحداث فضلت جاية، مبينفّذش خالص.
+- **Throttle** — نفّذ **مرة كل فترة ثابتة** مهما كان عدد الأحداث.
+
+\`\`\`javascript
+// debounce: بيلغي المؤقت القديم كل مرة
+function debounce(fn, ms) {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
+// throttle: بيتجاهل النداءات لحد ما الفترة تعدي
+function throttle(fn, ms) {
+  let last = 0;
+  return (...a) => {
+    if (Date.now() - last >= ms) { last = Date.now(); fn(...a); }
+  };
+}
+\`\`\`
+
+**إمتى تستخدم إيه:**
+
+- **debounce** → البحث أثناء الكتابة، تغيير حجم الشاشة، الحفظ التلقائي. المهم آخر قيمة.
+- **throttle** → الـ scroll، حركة الماوس، الـ infinite scroll. المهم تحديث منتظم.
+
+الجملة اللي بتفرّق: **الـ debounce بيهتم بآخر حدث، الـ throttle بيهتم بالمعدل.**`,
+      },
+      {
+        question: 'إيه هي الـ Higher-Order Functions والـ Currying؟',
+        difficulty: 'medium',
+        answer: `**Higher-order function** = function بتاخد function كـ argument، أو بترجّع function، أو الاتنين.
+
+إنت بتستخدمها كل يوم: \`map\` و \`filter\` و \`reduce\` و \`addEventListener\` و \`setTimeout\` كلهم HOFs.
+
+\`\`\`javascript
+const withLog = (fn) => (...args) => {
+  console.log('نداء بـ:', args);
+  return fn(...args);
+};
+\`\`\`
+
+**Currying** = تحويل function بتاخد كذا argument لسلسلة functions كل واحدة بتاخد واحد:
+
+\`\`\`javascript
+// من f(a, b, c)
+const add = (a, b, c) => a + b + c;
+// لـ f(a)(b)(c)
+const curried = (a) => (b) => (c) => a + b + c;
+curried(1)(2)(3); // 6
+\`\`\`
+
+**الفايدة العملية: التطبيق الجزئي.** بتثبّت أول argument وتطلّع نسخة متخصصة:
+
+\`\`\`javascript
+const multiply = (factor) => (n) => n * factor;
+const double = multiply(2);
+[1, 2, 3].map(double); // [2, 4, 6]
+\`\`\`
+
+الآلية اللي بتخلي ده يشتغل هي **الـ closures** — كل مستوى ماسك الـ argument بتاعه.`,
+      },
+      {
+        question: 'إيه هو الـ Type Coercion؟',
+        difficulty: 'medium',
+        answer: `تحويل الـ engine للأنواع تلقائيًا لما تقارن أو تجمع حاجات من أنواع مختلفة.
+
+**الضمني (implicit)** — بيحصل لوحده:
+
+\`\`\`javascript
+'5' + 3      // '53'  ← الـ + مع string بيعمل concatenation
+'5' - 3      // 2     ← الـ - رياضي بس، فبيحوّل لأرقام
+[] + {}      // '[object Object]'
+1 + true     // 2     ← true بقت 1
+\`\`\`
+
+**الصريح (explicit)** — إنت اللي بتعمله: \`Number(x)\` و \`String(x)\` و \`Boolean(x)\`.
+
+**القيم الـ falsy تمانية:** \`false\`، \`0\`، \`-0\`، \`0n\`، \`''\`، \`null\`، \`undefined\`، \`NaN\`. أي حاجة تانية truthy — بما فيها \`[]\` و \`{}\` و \`'0'\` و \`'false'\`.
+
+(وفيه تاسعة غريبة: \`document.all\` falsy، وده سلوك متسايب عمدًا في المواصفات عشان مواقع قديمة.)
+
+**أدوات المقارنة الدقيقة:**
+
+\`\`\`javascript
+Number.isNaN(x)   // مبيحوّلش — على عكس isNaN القديمة
+Object.is(NaN, NaN)  // true  ← الوحيدة اللي بتمسك دي
+Object.is(0, -0)     // false ← والوحيدة اللي بتفرّق دي
+\`\`\`
+
+**القاعدة:** استخدم \`===\` وحوّل بإيدك. الـ coercion الضمني مصدر باجات مش ميزة.`,
+      },
+      {
+        question: 'اشرح دورة حياة الرندرة في React',
+        difficulty: 'hard',
+        answer: `فيه **مرحلتين**:
+
+**1. مرحلة الرندرة (Render)** — React بتنادي الكومبوننتات وتبني شجرة العناصر، وتقارنها بالقديمة (**reconciliation**) عشان تعرف إيه اللي اتغيّر.
+
+المرحلة دي **نقية** — مفيش تأثيرات جانبية، ومفيش لمس للـ DOM. وممكن React **تقاطعها وترميها وتبدأ من تاني**، بس ده بيحصل بس في التحديثات المعلّمة كـ transitions.
+
+**2. مرحلة الالتزام (Commit)** — React بتطبّق التغييرات على الـ DOM الحقيقي. المرحلة دي **متزامنة ومينفعش تتقاطع**.
+
+الترتيب جواها:
+
+1. تعديلات الـ DOM
+2. \`useLayoutEffect\` + تحديث الـ refs
+3. المتصفح **بيرسم**
+4. \`useEffect\`
+
+وعشان كده \`useLayoutEffect\` بيمنع الرفرفة — هو بيشتغل قبل الخطوة 3.
+
+**الـ StrictMode** بتخلي التطوير يحاكي mount ثم unmount ثم mount، فالـ effect بيشتغل وينضّف ويشتغل تاني. الغرض إنها تكشف الـ effects اللي تنظيفها ناقص. **وده سلوك React 18 مع \`createRoot\`** — React 17 مكنتش بتعمله للـ effects.`,
+      },
+    ],
+    gotchas: [
+      {
+        title: 'الـ ssr: false مينفعش في Server Component',
+        description:
+          'خيار ssr: false في next/dynamic بيشتغل بس جوه Client Component. لو استخدمته في Server Component هيرمي error، لإن السيرفر مش بيرندر الـ client boundaries بالطريقة دي.',
+      },
+      {
+        title: 'الـ loading.tsx بيغلّف الصفحة كلها',
+        description:
+          'ملف loading.tsx بيتحوّل لـ Suspense boundary حوالين الـ page بالكامل. لو عايز أجزاء تظهر قبل التانية، حط <Suspense> بإيدك حوالين الأجزاء البطيئة بس.',
+      },
+    ],
   },
 ];
