@@ -9,7 +9,8 @@ export type ModuleId =
   | 'behavioral'
   | 'coding-challenges'
   | 'git'
-  | 'graphql';
+  | 'graphql'
+  | 'rapid-fire';
 
 export interface CodeExample {
   title: string;

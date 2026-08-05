@@ -11,6 +11,7 @@ import {
 } from './other-modules';
 import { gitContent } from './git';
 import { graphqlContent } from './graphql';
+import { rapidFireContent } from './rapidFire';
 import { arabicContent } from './arabicContent';
 import type { TopicContent, ModuleId } from '@/types';
 
@@ -26,6 +27,7 @@ export const ALL_CONTENT: TopicContent[] = [
   ...codingChallengesContent,
   ...gitContent,
   ...graphqlContent,
+  ...rapidFireContent,
 ];
 
 export const CONTENT_MAP: Record<string, TopicContent> = Object.fromEntries(

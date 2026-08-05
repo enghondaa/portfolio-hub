@@ -25,6 +25,7 @@ const MODULE_COLORS: Record<ModuleId, { border: string; bg: string; text: string
   behavioral:         { border: 'border-[var(--color-warning)]/30',  bg: 'bg-[var(--color-warning)]/10',  text: 'text-[var(--color-warning)]' },
   'coding-challenges':{ border: 'border-[var(--color-accent-light)]/30',    bg: 'bg-[var(--color-accent-soft)]',    text: 'text-[var(--color-accent-light)]' },
   'graphql':          { border: 'border-[var(--color-accent-light)]/30',    bg: 'bg-[var(--color-accent-soft)]',    text: 'text-[var(--color-accent-light)]' },
+  'rapid-fire':       { border: 'border-[var(--color-accent)]/30',    bg: 'bg-[var(--color-accent-soft)]',    text: 'text-[var(--color-accent)]' },
   'git':              { border: 'border-[var(--color-warning)]/30',  bg: 'bg-[var(--color-warning)]/10',  text: 'text-[var(--color-warning)]' },
 };
 

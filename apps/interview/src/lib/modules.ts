@@ -165,6 +165,17 @@ export const MODULES: ModuleInfo[] = [
       { id: 'workflows', title: 'Team Workflows & Best Practices', estimatedTime: '30 min', moduleId: 'git' },
     ],
   },
+  {
+    id: 'rapid-fire',
+    title: 'الأسئلة الأكثر تكرارًا',
+    description: 'مراجعة سريعة قبل الانترفيو: أشهر أسئلة JavaScript و React و Next.js بإجابات مختصرة',
+    icon: 'Q',
+    color: 'amber',
+    topics: [
+      { id: 'js-essentials', title: 'أساسيات JavaScript المتكررة', estimatedTime: '50 min', moduleId: 'rapid-fire' },
+      { id: 'react-essentials', title: 'أساسيات React المتكررة', estimatedTime: '55 min', moduleId: 'rapid-fire' },
+    ],
+  },
 ];
 
 export const MODULE_MAP = Object.fromEntries(MODULES.map((m) => [m.id, m]));
