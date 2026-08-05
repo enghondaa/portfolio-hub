@@ -2,71 +2,12 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { InterviewQuestion } from '@/types';
+import { renderMarkdown } from '@/lib/markdown';
 
 interface InterviewQuestionProps {
   question: InterviewQuestion;
   studyMode?: boolean;
   index?: number;
-}
-
-function inlineMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code class="text-[var(--color-accent-light)] bg-[var(--color-neutral-50)] px-1 rounded text-xs">$1</code>');
-}
-
-function renderMarkdown(text: string): string {
-  const lines = text.split('\n');
-  const html: string[] = [];
-  let inList = false;
-  let inCode = false;
-  const codeLines: string[] = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    // Indexed access is possibly-undefined under noUncheckedIndexedAccess even
-    // though i is bounded by lines.length; an empty string parses identically.
-    const line = lines[i] ?? '';
-
-    // Fenced code block start
-    if (!inCode && line.startsWith('```')) {
-      if (inList) { html.push('</ul>'); inList = false; }
-      inCode = true;
-      codeLines.length = 0;
-      continue;
-    }
-
-    // Fenced code block end
-    if (inCode && line.startsWith('```')) {
-      inCode = false;
-      const escaped = codeLines.join('\n')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-      html.push(`<pre class="bg-[var(--color-neutral-50)] rounded p-3 my-2 overflow-x-auto text-xs text-[var(--color-neutral-800)] leading-relaxed"><code>${escaped}</code></pre>`);
-      continue;
-    }
-
-    if (inCode) { codeLines.push(line); continue; }
-
-    // Bullet list item
-    if (line.match(/^- /)) {
-      if (!inList) { html.push('<ul class="list-disc pl-5 my-2 space-y-1">'); inList = true; }
-      html.push(`<li class="text-[var(--color-neutral-700)]">${inlineMarkdown(line.slice(2))}</li>`);
-      continue;
-    }
-
-    // Close list before non-list line
-    if (inList) { html.push('</ul>'); inList = false; }
-
-    // Blank line
-    if (line.trim() === '') continue;
-
-    // Normal paragraph line
-    html.push(`<p class="text-[var(--color-neutral-700)] leading-relaxed mb-1">${inlineMarkdown(line)}</p>`);
-  }
-
-  if (inList) html.push('</ul>');
-  return html.join('');
 }
 
 const difficultyColors = {
@@ -130,7 +71,7 @@ export default function InterviewQuestionCard({
               prose-code:text-[var(--color-accent-light)] prose-code:bg-[var(--color-neutral-50)] prose-code:px-1 prose-code:rounded
               prose-li:text-[var(--color-neutral-700)]
             "
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(question.answer) }}
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(question.answer, 'compact') }}
           />
         </div>
       )}

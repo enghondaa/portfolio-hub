@@ -1,58 +1,7 @@
 'use client';
 import { useEffect } from 'react';
+import { renderMarkdown } from '@/lib/markdown';
 
-function inlineMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code class="text-[var(--color-accent-light)] bg-[var(--color-neutral-50)] px-1 rounded text-sm">$1</code>');
-}
-
-function renderMarkdown(text: string): string {
-  const lines = text.split('\n');
-  const html: string[] = [];
-  let inList = false;
-  let inCode = false;
-  const codeLines: string[] = [];
-
-  for (const line of lines) {
-    if (!inCode && line.startsWith('```')) {
-      if (inList) { html.push('</ul>'); inList = false; }
-      inCode = true;
-      codeLines.length = 0;
-      continue;
-    }
-    if (inCode && line.startsWith('```')) {
-      inCode = false;
-      const escaped = codeLines.join('\n').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      html.push(`<pre class="bg-[var(--color-neutral-0)] border border-[var(--color-neutral-200)] rounded p-3 my-2 overflow-x-auto text-sm text-[var(--color-neutral-800)] leading-relaxed"><code>${escaped}</code></pre>`);
-      continue;
-    }
-    if (inCode) { codeLines.push(line); continue; }
-
-    // Table row
-    if (line.startsWith('|')) {
-      if (inList) { html.push('</ul>'); inList = false; }
-      if (line.match(/^\|[-| ]+\|$/)) continue; // separator row
-      const cells = line.split('|').filter(c => c.trim());
-      html.push(`<tr>${cells.map(c => `<td class="px-3 py-2 border border-[var(--color-neutral-200)] text-[var(--color-neutral-700)]">${inlineMarkdown(c.trim())}</td>`).join('')}</tr>`);
-      continue;
-    }
-
-    // Bullet
-    if (line.match(/^- /)) {
-      if (!inList) { html.push('<ul class="list-disc pl-5 my-2 space-y-1">'); inList = true; }
-      html.push(`<li class="text-[var(--color-neutral-700)]">${inlineMarkdown(line.slice(2))}</li>`);
-      continue;
-    }
-
-    if (inList) { html.push('</ul>'); inList = false; }
-    if (line.trim() === '') continue;
-    html.push(`<p class="text-[var(--color-neutral-700)] leading-relaxed mb-2">${inlineMarkdown(line)}</p>`);
-  }
-
-  if (inList) html.push('</ul>');
-  return html.join('');
-}
 import Link from 'next/link';
 import { Clock, CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useProgressStore } from '@/lib/store';
@@ -60,7 +9,7 @@ import CodeBlock from '@/components/ui/CodeBlock';
 import InterviewQuestionCard from '@/components/ui/InterviewQuestion';
 import ConfidenceRating from '@/components/ui/ConfidenceRating';
 import type { TopicContent, TopicMeta } from '@/types';
-import { getTopicContent } from '@/lib/content';
+import { getTopicContent, hasArabicContent } from '@/lib/content';
 import { UI_TRANSLATIONS, TOPIC_TRANSLATIONS } from '@/lib/translations';
 
 interface TopicPageProps {
@@ -72,6 +21,10 @@ interface TopicPageProps {
 export default function TopicPage({ topic, prevTopic, nextTopic }: TopicPageProps) {
   const { completedTopics, toggleTopicComplete, studyMode, markStudied, language } = useProgressStore();
   const activeTopic = getTopicContent(topic.moduleId, topic.id, language) || topic;
+
+  // Arabic falls back to English per-topic. Saying so beats leaving the reader
+  // to wonder whether the language toggle is broken.
+  const showingEnglishFallback = language === 'ar' && !hasArabicContent(topic.moduleId, topic.id);
   const topicKey = `${activeTopic.moduleId}/${activeTopic.id}`;
   const isDone = completedTopics[topicKey];
 
@@ -90,12 +43,18 @@ export default function TopicPage({ topic, prevTopic, nextTopic }: TopicPageProp
 
   return (
     <article className="max-w-4xl mx-auto px-4 py-8 print:px-0">
+      {showingEnglishFallback && (
+        <div className="mb-6 rounded-xl border border-[var(--color-warning)]/30 bg-[var(--color-warning)]/10 px-4 py-3 text-sm text-[var(--color-neutral-700)]">
+          الموضوع ده لسه متترجمش. المحتوى تحت بالإنجليزي.
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <span className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-400)]">
             <Clock size={14} />
-            {language === 'ar' ? activeTopic.estimatedTime : activeTopic.estimatedTime}
+            {activeTopic.estimatedTime}
           </span>
         </div>
         <div className="flex items-start justify-between gap-4">

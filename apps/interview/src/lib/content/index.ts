@@ -60,3 +60,14 @@ export const ALL_INTERVIEW_QUESTIONS = ALL_CONTENT.flatMap((topic) =>
     moduleId: topic.moduleId,
   }))
 );
+
+/**
+ * Whether a topic has a real Arabic translation, as opposed to falling back to
+ * English. getTopicContent falls back silently, which is right for rendering
+ * but wrong for the reader: switching to Arabic and seeing English looks like
+ * the toggle is broken rather than like the translation is missing. The UI uses
+ * this to say so.
+ */
+export function hasArabicContent(moduleId: ModuleId, topicId: string): boolean {
+  return Boolean(ARABIC_CONTENT_MAP[`${moduleId}/${topicId}`]);
+}

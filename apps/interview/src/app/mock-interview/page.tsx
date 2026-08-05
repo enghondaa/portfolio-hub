@@ -5,6 +5,8 @@ import { Shuffle, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { ALL_INTERVIEW_QUESTIONS } from '@/lib/content';
 import { MODULES } from '@/lib/modules';
 import Timer from '@/components/ui/Timer';
+import { Dropdown } from '@/components/ui/Dropdown';
+import { renderMarkdown } from '@/lib/markdown';
 import { useProgressStore } from '@/lib/store';
 import { UI_TRANSLATIONS, MODULE_TRANSLATIONS, TOPIC_TRANSLATIONS } from '@/lib/translations';
 
@@ -96,24 +98,28 @@ export default function MockInterviewPage() {
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <select
-          value={filterModule}
-          onChange={(e) => setFilterModule(e.target.value)}
-          className="px-3 py-2 bg-[var(--color-neutral-50)] border border-[var(--color-neutral-200)] rounded-lg text-sm text-[var(--color-neutral-700)] focus:outline-none focus:border-[var(--color-neutral-200)]"
-        >
-          <option value="all">
-            {t.allModulesCount.replace('{count}', String(ALL_INTERVIEW_QUESTIONS.length))}
-          </option>
-          {MODULES.map((m) => {
-            const count = ALL_INTERVIEW_QUESTIONS.filter((q) => q.moduleId === m.id).length;
-            const title = modTrans?.[m.id as keyof typeof modTrans] || m.title;
-            return (
-              <option key={m.id} value={m.id}>
-                {title} ({count})
-              </option>
-            );
-          })}
-        </select>
+        {/* A native <select> renders its option list through the operating
+            system, so on this dark surface the popup came out white with a
+            cramped arrow and no way to theme it. Same reason the Task Board
+            has its own listbox. */}
+        <div className="w-72">
+          <Dropdown
+            label={t.allModulesCount.replace('{count}', String(ALL_INTERVIEW_QUESTIONS.length))}
+            value={filterModule}
+            onChange={setFilterModule}
+            options={[
+              {
+                value: 'all',
+                label: t.allModulesCount.replace('{count}', String(ALL_INTERVIEW_QUESTIONS.length)),
+              },
+              ...MODULES.map((m) => {
+                const count = ALL_INTERVIEW_QUESTIONS.filter((q) => q.moduleId === m.id).length;
+                const title = modTrans?.[m.id as keyof typeof modTrans] || m.title;
+                return { value: m.id, label: `${title} (${count})` };
+              }),
+            ]}
+          />
+        </div>
         <span className="text-xs text-[var(--color-neutral-400)]">
           {t.questionHash.replace('{count}', String(sessionCount))}
         </span>
@@ -168,7 +174,10 @@ export default function MockInterviewPage() {
                 {t.answer}
               </span>
             </div>
-            <p className="text-[var(--color-neutral-700)] leading-relaxed whitespace-pre-line">{current.answer}</p>
+            <div
+              className="leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(current.answer) }}
+            />
           </div>
         )}
       </div>
