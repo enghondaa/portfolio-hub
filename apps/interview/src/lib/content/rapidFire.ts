@@ -563,7 +563,7 @@ if (!session) redirect('/login');
           'React 18 بتحاكي mount ثم unmount ثم mount تاني في وضع التطوير عشان تكشف الـ effects اللي تنظيفها ناقص. React 17 مكنتش بتعمل ده للـ effects. الفرق ده هو السؤال نفسه.',
       },
     ],
-  },,
+  },
   {
     id: 'next-essentials',
     moduleId: 'rapid-fire',
