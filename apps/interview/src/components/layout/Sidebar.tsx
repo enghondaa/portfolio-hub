@@ -114,11 +114,11 @@ export default function Sidebar({ onClose }: SidebarProps) {
                 {progress > 0 && (
                   <span className="text-xs text-[var(--color-neutral-400)]">{progress}%</span>
                 )}
+                {/* The collapsed chevron is flipped in RTL: it points the way the
+                    language reads, otherwise it points back out of the panel. */}
                 {isExpanded ? (
                   <ChevronDown size={14} className="text-[var(--color-neutral-400)] shrink-0" />
                 ) : (
-                  {/* Flipped in RTL: a "collapsed, expands forward" chevron has to point the
-                      way the language reads, otherwise it points back out of the panel. */}
                   <ChevronRight size={14} className="text-[var(--color-neutral-400)] shrink-0 rtl:-rotate-180" />
                 )}
               </button>
