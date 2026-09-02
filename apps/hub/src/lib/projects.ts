@@ -133,12 +133,23 @@ export interface RealProject {
    * page learns less than one who was never invited to click.
    */
   retired?: boolean;
+  /**
+   * Path under /public to a screenshot of the working product, e.g.
+   * "/shots/laila.png".
+   *
+   * Preferred over the live iframe wherever it exists. Three of these sites are
+   * behind a sign-in, so framing them shows a login box — which is a worse
+   * advertisement than no preview at all, whether or not the site permits
+   * framing. A screenshot shows the thing the work actually produced.
+   */
+  screenshot?: string;
 }
 
 /** Actual production work, built for real employers. Not demos. */
 export const realProjects: RealProject[] = [
   {
     name: "laila.dialexpert.com",
+    screenshot: "/shots/laila.png",
     url: "https://laila.dialexpert.com",
     description:
       "Internal operations platform for a debt-relief call centre, replacing a legacy Blazor Server system. 35 screens behind a 29-key permission model, a rules engine that reads credit files against a 3,000-entry creditor list, bank-statement parsing, deal and attendance tracking, and a Discord bot that runs the nightly checks. Access is staff-only, so the link goes to the sign-in page.",
@@ -150,6 +161,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "app.youhue.com",
+    screenshot: "/shots/youhue-app.png",
     url: "https://app.youhue.com",
     description:
       "The educator side of a K-12 wellbeing platform. Teachers run a daily one-minute emotional check-in with a class, then read the result as class-climate trends and per-student history, with alerts when a reflection or a pattern needs attention and a shared log for what was done about it.",
@@ -159,6 +171,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "youhue.com",
+    screenshot: "/shots/youhue-site.png",
     url: "https://www.youhue.com",
     description:
       "The public marketing site for the same platform: product tour, pricing, research summaries and school case studies. Built in Webflow rather than in code, and feeding sign-ups into the app.",
@@ -168,6 +181,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "aigentsrealty.com",
+    screenshot: "/shots/aigentsrealty.png",
     url: "https://www.aigentsrealty.com",
     description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],

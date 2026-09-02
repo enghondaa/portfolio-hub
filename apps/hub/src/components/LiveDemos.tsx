@@ -11,6 +11,10 @@ export function LiveDemos() {
   // than as a site that has since been taken down.
   const liveProjects = realProjects.filter((project) => !project.retired);
   const [active, setActive] = useState(0);
+  // Screenshots that 404 fall back to the live frame rather than showing a
+  // broken image. That way a missing file degrades to the old behaviour
+  // instead of to a hole in the page.
+  const [failed, setFailed] = useState<Record<string, boolean>>({});
   const current = liveProjects[active] ?? liveProjects[0]!;
   const host = current.name;
 
@@ -56,14 +60,28 @@ export function LiveDemos() {
             </a>
           </div>
           <div className="relative aspect-[16/9.5] overflow-hidden bg-[var(--color-neutral-50)]">
-            <iframe
-              key={current.url}
-              src={current.url}
-              title={`Live preview of ${host}`}
-              loading="lazy"
-              className="pointer-events-none block border-0"
-              style={{ width: "166.667%", height: "166.667%", transform: "scale(0.6)", transformOrigin: "0 0" }}
-            />
+            {current.screenshot && !failed[current.url] ? (
+              /* eslint-disable-next-line @next/next/no-img-element -- a plain
+                 img keeps onError available, which is what drives the fallback
+                 to the live frame when a screenshot has not been added yet. */
+              <img
+                key={current.screenshot}
+                src={current.screenshot}
+                alt={`${host} — screenshot of the running product`}
+                loading="lazy"
+                className="block h-full w-full object-cover object-top"
+                onError={() => setFailed((prev) => ({ ...prev, [current.url]: true }))}
+              />
+            ) : (
+              <iframe
+                key={current.url}
+                src={current.url}
+                title={`Live preview of ${host}`}
+                loading="lazy"
+                className="pointer-events-none block border-0"
+                style={{ width: "166.667%", height: "166.667%", transform: "scale(0.6)", transformOrigin: "0 0" }}
+              />
+            )}
             <a
               href={current.url}
               target="_blank"
@@ -77,7 +95,8 @@ export function LiveDemos() {
           </div>
         </div>
         <p className="mt-3.5 px-1 font-mono text-[11.5px] text-[var(--color-neutral-400)]">
-          / previews are the live production apps, embedded at 60% scale
+          / screenshots of the running products — three of these sit behind a
+          sign-in, so the live page would only show you a login box
         </p>
       </Reveal>
     </section>
