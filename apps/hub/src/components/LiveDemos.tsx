@@ -16,6 +16,7 @@ export function LiveDemos() {
   // instead of to a hole in the page.
   const [failed, setFailed] = useState<Record<string, boolean>>({});
   const current = liveProjects[active] ?? liveProjects[0]!;
+  const markFailed = () => setFailed((prev) => (prev[current.url] ? prev : { ...prev, [current.url]: true }));
   const host = current.name;
 
   return (
@@ -66,11 +67,20 @@ export function LiveDemos() {
                  to the live frame when a screenshot has not been added yet. */
               <img
                 key={current.screenshot}
+                ref={(node) => {
+                  // onError alone is not enough. A missing screenshot 404s
+                  // while the HTML is still being parsed, so the error event
+                  // fires before React has hydrated and attached a handler —
+                  // nothing catches it and the broken-image icon stays.
+                  // A failed image settles at complete === true with a
+                  // naturalWidth of 0, and that state persists, so checking it
+                  // when the node mounts catches the case onError missed.
+                  if (node?.complete && node.naturalWidth === 0) markFailed();
+                }}
                 src={current.screenshot}
                 alt={`${host} — screenshot of the running product`}
-                loading="lazy"
                 className="block h-full w-full object-cover object-top"
-                onError={() => setFailed((prev) => ({ ...prev, [current.url]: true }))}
+                onError={markFailed}
               />
             ) : (
               <iframe
