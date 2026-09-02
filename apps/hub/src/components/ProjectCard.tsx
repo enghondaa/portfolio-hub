@@ -5,7 +5,12 @@ import { ArrowUpRight, ArrowRight } from "lucide-react";
 
 export interface ProjectCardProps {
   index: number;
-  href: string;
+  /**
+   * Omitted for work that is no longer reachable. The card then renders as a
+   * plain element instead of a link, so nothing invites a click that would land
+   * on a dead page.
+   */
+  href?: string;
   title: string;
   description: string;
   stack: string[];
@@ -29,12 +34,14 @@ export interface ProjectCardProps {
 
 /** Numbered project card with a subtle cursor-tracked 3D tilt (skipped under prefers-reduced-motion). Featured cards get the dark treatment; wide cards span the full grid row. */
 export function ProjectCard({ index, href, title, description, stack, tag, external, featured, wide, fill }: ProjectCardProps) {
-  const ref = useRef<HTMLAnchorElement>(null);
+  // Typed as HTMLElement because the card renders as an <a> or a <div>.
+  // getBoundingClientRect is on both, which is all the tilt effect needs.
+  const ref = useRef<HTMLElement>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const Arrow = external ? ArrowUpRight : ArrowRight;
   const number = String(index + 1).padStart(2, "0");
 
-  function handleMouseMove(event: MouseEvent<HTMLAnchorElement>) {
+  function handleMouseMove(event: MouseEvent<HTMLElement>) {
     if (!ref.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = ref.current.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
@@ -66,10 +73,13 @@ export function ProjectCard({ index, href, title, description, stack, tag, exter
 
   const style = { transform: `perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`, transformStyle: "preserve-3d" as const };
   const linkProps = { target: external ? "_blank" : undefined, rel: external ? "noopener noreferrer" : undefined };
+  // `a` without href is not focusable and carries no link semantics, which is
+  // exactly right here: the card is still readable, just not actionable.
+  const Tag = href ? "a" : "div";
 
   if (wide) {
     return (
-      <a
+      <Tag
         ref={ref}
         href={href}
         {...linkProps}
@@ -90,12 +100,12 @@ export function ProjectCard({ index, href, title, description, stack, tag, exter
           <p className={`mt-2 text-[15px] leading-relaxed ${descTone}`}>{description}</p>
         </div>
         <div className={`font-mono text-[11px] ${fill ? "mt-auto pt-2" : ""} ${stackTone}`}>{stack.join(" · ")}</div>
-      </a>
+      </Tag>
     );
   }
 
   return (
-    <a
+    <Tag
       ref={ref}
       href={href}
       {...linkProps}
@@ -113,6 +123,6 @@ export function ProjectCard({ index, href, title, description, stack, tag, exter
       </div>
       <p className={`text-[15px] leading-relaxed ${descTone}`}>{description}</p>
       <div className={`font-mono text-[11px] ${fill ? "mt-auto pt-2" : ""} ${stackTone}`}>{stack.join(" · ")}</div>
-    </a>
+    </Tag>
   );
 }

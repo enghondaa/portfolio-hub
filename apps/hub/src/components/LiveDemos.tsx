@@ -6,8 +6,12 @@ import { realProjects } from "@/lib/projects";
 
 /** Tabbed live preview of the real production sites, embedded at ~60% scale inside a browser-chrome frame. Note: a couple of these sites may decline to be framed (X-Frame-Options/CSP) — the "Visit live site" overlay always works as a fallback. */
 export function LiveDemos() {
+  // Retired sites are excluded rather than framed. A dead URL in an iframe
+  // renders as an empty rectangle, which reads as a broken portfolio rather
+  // than as a site that has since been taken down.
+  const liveProjects = realProjects.filter((project) => !project.retired);
   const [active, setActive] = useState(0);
-  const current = realProjects[active] ?? realProjects[0]!;
+  const current = liveProjects[active] ?? liveProjects[0]!;
   const host = current.name;
 
   return (
@@ -23,7 +27,7 @@ export function LiveDemos() {
 
       <Reveal delay={0.05}>
         <div className="mb-4 flex flex-wrap gap-2">
-          {realProjects.map((project, i) => (
+          {liveProjects.map((project, i) => (
             <button
               key={project.url}
               type="button"

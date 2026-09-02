@@ -126,6 +126,13 @@ export interface RealProject {
   featured?: boolean;
   /** Renders as a full-width row instead of a grid cell. */
   wide?: boolean;
+  /**
+   * The site is no longer reachable. It keeps its entry, because the work
+   * happened and the experience is real, but it renders without a link and is
+   * excluded from the live-preview strip. A visitor clicking through to a dead
+   * page learns less than one who was never invited to click.
+   */
+  retired?: boolean;
 }
 
 /** Actual production work, built for real employers. Not demos. */
@@ -142,6 +149,24 @@ export const realProjects: RealProject[] = [
     wide: true,
   },
   {
+    name: "app.youhue.com",
+    url: "https://app.youhue.com",
+    description:
+      "The educator side of a K-12 wellbeing platform. Teachers run a daily one-minute emotional check-in with a class, then read the result as class-climate trends and per-student history, with alerts when a reflection or a pattern needs attention and a shared log for what was done about it.",
+    stack: ["Next.js", "React", "TypeScript"],
+    employer: "YouHue",
+    tag: "K-12 · EdTech",
+  },
+  {
+    name: "youhue.com",
+    url: "https://www.youhue.com",
+    description:
+      "The public marketing site for the same platform: product tour, pricing, research summaries and school case studies. Built in Webflow rather than in code, and feeding sign-ups into the app.",
+    stack: ["Webflow"],
+    employer: "YouHue",
+    tag: "Marketing site",
+  },
+  {
     name: "aigentsrealty.com",
     url: "https://www.aigentsrealty.com",
     description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
@@ -151,6 +176,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "account.zogilabs.io",
+    retired: true,
     url: "https://account.zogilabs.io",
     description: "User account management platform with integrated Web3 wallet, serving 10,000+ users.",
     stack: ["React", "TypeScript", "Next.js", "Material-UI", "Web3React"],
@@ -159,6 +185,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "mblk.bezogia.com",
+    retired: true,
     url: "https://mblk.bezogia.com",
     description: "Blockchain marketplace for seamless crypto transactions with real-time pricing.",
     stack: ["React", "Next.js", "TypeScript", "Web3React"],
@@ -167,6 +194,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "bezogia.com",
+    retired: true,
     url: "https://bezogia.com",
     description: "Main cryptocurrency platform, optimized for performance and SEO.",
     stack: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
@@ -176,6 +204,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "zogilabs.io",
+    retired: true,
     url: "https://zogilabs.io",
     description: "Corporate site with a modern responsive design and 45% faster loads.",
     stack: ["React", "Next.js", "TypeScript"],
@@ -184,6 +213,7 @@ export const realProjects: RealProject[] = [
   },
   {
     name: "petzogi-web-eta.vercel.app",
+    retired: true,
     url: "https://petzogi-web-eta.vercel.app",
     description: "NFT minting platform with custom smart-contract integration.",
     stack: ["React", "Next.js", "TypeScript", "Web3React"],

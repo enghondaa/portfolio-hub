@@ -35,7 +35,7 @@ export default function ProjectsPage() {
             <Reveal key={project.url} delay={i * 0.06}>
               <ProjectCard
                 index={i}
-                href={project.url}
+                href={project.retired ? undefined : project.url}
                 title={project.name.replace(/^https?:\/\//, "")}
                 description={project.description}
                 stack={project.stack}
