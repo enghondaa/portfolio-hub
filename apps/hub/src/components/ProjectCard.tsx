@@ -6,9 +6,11 @@ import { ArrowUpRight, ArrowRight } from "lucide-react";
 export interface ProjectCardProps {
   index: number;
   /**
-   * Omitted for work that is no longer reachable. The card then renders as a
-   * plain element instead of a link, so nothing invites a click that would land
-   * on a dead page.
+   * Omitted for work that is no longer reachable. The element stays an anchor,
+   * but an anchor without href is not focusable and carries no link semantics,
+   * so the card reads the same and stops being clickable. No separate element
+   * type is needed — and trying to swap in a div breaks the ref, because a
+   * union of "a" | "div" resolves its props to the stricter of the two.
    */
   href?: string;
   title: string;
@@ -34,14 +36,12 @@ export interface ProjectCardProps {
 
 /** Numbered project card with a subtle cursor-tracked 3D tilt (skipped under prefers-reduced-motion). Featured cards get the dark treatment; wide cards span the full grid row. */
 export function ProjectCard({ index, href, title, description, stack, tag, external, featured, wide, fill }: ProjectCardProps) {
-  // Typed as HTMLElement because the card renders as an <a> or a <div>.
-  // getBoundingClientRect is on both, which is all the tilt effect needs.
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLAnchorElement>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const Arrow = external ? ArrowUpRight : ArrowRight;
   const number = String(index + 1).padStart(2, "0");
 
-  function handleMouseMove(event: MouseEvent<HTMLElement>) {
+  function handleMouseMove(event: MouseEvent<HTMLAnchorElement>) {
     if (!ref.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = ref.current.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
@@ -73,13 +73,10 @@ export function ProjectCard({ index, href, title, description, stack, tag, exter
 
   const style = { transform: `perspective(900px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`, transformStyle: "preserve-3d" as const };
   const linkProps = { target: external ? "_blank" : undefined, rel: external ? "noopener noreferrer" : undefined };
-  // `a` without href is not focusable and carries no link semantics, which is
-  // exactly right here: the card is still readable, just not actionable.
-  const Tag = href ? "a" : "div";
 
   if (wide) {
     return (
-      <Tag
+      <a
         ref={ref}
         href={href}
         {...linkProps}
@@ -100,12 +97,12 @@ export function ProjectCard({ index, href, title, description, stack, tag, exter
           <p className={`mt-2 text-[15px] leading-relaxed ${descTone}`}>{description}</p>
         </div>
         <div className={`font-mono text-[11px] ${fill ? "mt-auto pt-2" : ""} ${stackTone}`}>{stack.join(" · ")}</div>
-      </Tag>
+      </a>
     );
   }
 
   return (
-    <Tag
+    <a
       ref={ref}
       href={href}
       {...linkProps}
@@ -123,6 +120,6 @@ export function ProjectCard({ index, href, title, description, stack, tag, exter
       </div>
       <p className={`text-[15px] leading-relaxed ${descTone}`}>{description}</p>
       <div className={`font-mono text-[11px] ${fill ? "mt-auto pt-2" : ""} ${stackTone}`}>{stack.join(" · ")}</div>
-    </Tag>
+    </a>
   );
 }
