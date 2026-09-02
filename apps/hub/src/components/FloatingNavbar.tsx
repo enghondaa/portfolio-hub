@@ -11,7 +11,18 @@ const links = [
   { href: "/contact", label: "Contact" },
 ];
 
-/** Nav link / CTA pill that leans gently toward the cursor. Plain CSS transform, no dependency. */
+/**
+ * Nav link / CTA pill that leans gently toward the cursor. Plain CSS transform,
+ * no dependency.
+ *
+ * The wrapper is inline-flex, not inline-block. As inline-block its height came
+ * from the text's line box, which carries the font's descender space below the
+ * baseline, while the padded anchor inside was still inline and so its vertical
+ * padding sat outside that box entirely. The row then centred the line box
+ * rather than the pill anyone could see, and the pill came out visibly off — a
+ * gap above it and none below. inline-flex makes the wrapper hug its child, and
+ * leading-none on the anchor drops the descender space for good measure.
+ */
 function Magnetic({ children, className }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -31,7 +42,7 @@ function Magnetic({ children, className }: { children: React.ReactNode; classNam
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setOffset({ x: 0, y: 0 })}
       style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
-      className={`inline-block transition-transform duration-150 ease-out ${className ?? ""}`}
+      className={`inline-flex items-center transition-transform duration-150 ease-out ${className ?? ""}`}
     >
       {children}
     </span>
@@ -84,10 +95,10 @@ export function FloatingNavbar() {
             })}
           </span>
 
-          <Magnetic className="hidden sm:inline-block">
+          <Magnetic className="hidden sm:inline-flex">
             <a
               href="mailto:eng.mohand2389@gmail.com"
-              className="whitespace-nowrap rounded-full bg-[var(--color-neutral-800)] px-[18px] py-[10px] font-mono text-[12.5px] text-[var(--color-neutral-0)]"
+              className="inline-flex items-center whitespace-nowrap rounded-full bg-[var(--color-neutral-800)] px-[18px] py-[10px] font-mono text-[12.5px] leading-none text-[var(--color-neutral-0)]"
             >
               Hire me
             </a>
