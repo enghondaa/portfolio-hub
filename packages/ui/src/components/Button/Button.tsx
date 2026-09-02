@@ -35,9 +35,17 @@ const sizeClasses: Record<ButtonSize, string> = {
 const variantClasses: Record<ButtonVariant, string> = {
   primary: cn(
     "bg-[var(--color-accent)] text-[var(--color-neutral-0)]",
-    "before:absolute before:inset-0 before:-z-10 before:content-[''] before:translate-x-[4px] before:translate-y-[4px] before:bg-[var(--color-neutral-800)] before:transition-transform before:duration-150 before:ease-out",
-    "hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[1px] active:translate-y-[1px]",
-    "transition-transform duration-150 ease-out"
+    // The offset block is a hard-edged box-shadow, not a ::before at -z-10.
+    // A negative z-index only sends the pseudo-element behind the parent's
+    // background while the parent creates no stacking context of its own — and
+    // any transform, filter or opacity on the button creates one, at which
+    // point -10 is clamped inside it and the block paints over the button
+    // instead of under it. That is what the loading and disabled stories were
+    // showing: a dark rectangle covering the control, offset down and right.
+    // box-shadow is always painted behind the background, so there is nothing
+    // to get wrong.
+    "shadow-[4px_4px_0_0_var(--color-neutral-800)]",
+    "transition-[transform,box-shadow] duration-150 ease-out"
   ),
   secondary: cn(
     "!h-auto !px-0 bg-transparent text-[var(--color-neutral-800)]",
@@ -46,6 +54,20 @@ const variantClasses: Record<ButtonVariant, string> = {
   ),
   ghost: "bg-transparent text-[var(--color-neutral-800)] underline-offset-4 hover:underline",
 };
+
+/**
+ * The press movement, applied only while the button can actually be pressed.
+ *
+ * This is decided in JS rather than with a `disabled:` variant because CSS
+ * `:hover` still matches a disabled button — the pointer events are suppressed
+ * but the selector is not — so a `hover:` rule would keep lifting a button
+ * nobody can click. Doing it here also covers the `href` form, which renders an
+ * anchor and would never match `:disabled` at all.
+ */
+const pressClasses = cn(
+  "hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-neutral-800)]",
+  "active:translate-x-[1px] active:translate-y-[1px] active:shadow-[3px_3px_0_0_var(--color-neutral-800)]"
+);
 
 /**
  * Base button. Renders a native <button> by default, keyboard accessible
@@ -57,11 +79,18 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
     { className, variant = "primary", size = "md", isLoading = false, disabled, children, href, arrow = false, ...props },
     ref
   ) => {
+    // `href` never renders a <button>, so it is never disabled; isLoading only
+    // applies to the button form, which is what the prop doc already says.
+    const isInactive = !href && (disabled || isLoading);
+
     const classes = cn(
       "group relative inline-flex items-center justify-center gap-2 rounded-md font-medium",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-neutral-0)]",
-      "disabled:cursor-not-allowed disabled:opacity-50",
+      // A control that cannot be pressed should not carry the affordance that
+      // says it can, so the offset block goes flat rather than being faded.
+      "disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none",
       variantClasses[variant],
+      isInactive ? "" : pressClasses,
       variant === "secondary" ? "" : sizeClasses[size],
       className
     );
