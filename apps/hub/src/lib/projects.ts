@@ -131,6 +131,17 @@ export interface RealProject {
 /** Actual production work, built for real employers. Not demos. */
 export const realProjects: RealProject[] = [
   {
+    name: "laila.dialexpert.com",
+    url: "https://laila.dialexpert.com",
+    description:
+      "Internal operations platform for a debt-relief call centre, replacing a legacy Blazor Server system. 35 screens behind a 29-key permission model, a rules engine that reads credit files against a 3,000-entry creditor list, bank-statement parsing, deal and attendance tracking, and a Discord bot that runs the nightly checks. Access is staff-only, so the link goes to the sign-in page.",
+    stack: ["Next.js 16", "React 19", "TypeScript", "Auth.js v5", "Postgres", "TanStack Query", "Radix UI", "Zod"],
+    employer: "DialExpert",
+    tag: "Production · internal tooling",
+    featured: true,
+    wide: true,
+  },
+  {
     name: "aigentsrealty.com",
     url: "https://www.aigentsrealty.com",
     description: "AI-powered Dubai property discovery platform: search projects, compare areas and developers, and review DLD-backed market data through an AI assistant.",
