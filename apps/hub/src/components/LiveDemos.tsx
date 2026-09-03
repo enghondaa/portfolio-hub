@@ -83,14 +83,37 @@ export function LiveDemos() {
                 onError={markFailed}
               />
             ) : (
-              <iframe
-                key={current.url}
-                src={current.url}
-                title={`Live preview of ${host}`}
-                loading="lazy"
-                className="pointer-events-none block border-0"
-                style={{ width: "166.667%", height: "166.667%", transform: "scale(0.6)", transformOrigin: "0 0" }}
-              />
+              /*
+                No live iframe here, deliberately.
+
+                Framing these does not work and cannot be made to. Two are
+                behind a sign-in, so the frame renders a login box; a third
+                comes back cross-origin and empty. The result was a grey
+                rectangle in every case — which reads as a broken portfolio,
+                the exact opposite of what this section is for.
+
+                A described panel always renders, says more than a shrunken
+                screenshot of a homepage would, and stops being needed the
+                moment a real screenshot lands in /public/shots.
+              */
+              <div className="flex h-full flex-col justify-center gap-3 px-7 py-8 sm:px-10">
+                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--color-accent)]">
+                  {current.tag}
+                </p>
+                <p className="max-w-[52ch] text-[15px] leading-relaxed text-[var(--color-neutral-700)]">
+                  {current.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {current.stack.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full bg-[var(--color-neutral-100)] px-2.5 py-1 font-mono text-[11px] text-[var(--color-neutral-600)]"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
             <a
               href={current.url}
@@ -105,8 +128,8 @@ export function LiveDemos() {
           </div>
         </div>
         <p className="mt-3.5 px-1 font-mono text-[11.5px] text-[var(--color-neutral-400)]">
-          / screenshots of the running products — three of these sit behind a
-          sign-in, so the live page would only show you a login box
+          / most of these sit behind a sign-in, so the panel describes the work
+          and the button opens the real thing
         </p>
       </Reveal>
     </section>
